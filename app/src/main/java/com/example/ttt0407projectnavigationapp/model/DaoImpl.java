@@ -1,6 +1,7 @@
 package com.example.ttt0407projectnavigationapp.model;
 
 import com.example.ttt0407projectnavigationapp.model.entity.Company;
+import com.example.ttt0407projectnavigationapp.model.entity.Product;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ public class DaoImpl implements Dao {
     //like LocalDatabase in TTT0404
 
     private List<Company> lisCompanies = new ArrayList<>();
+    private List<Product> lisProducts = new ArrayList<>();
 
     // SINGLETON
     // static so that only 1 instance can be used throughout app
@@ -28,6 +30,7 @@ public class DaoImpl implements Dao {
     @Override
     public List<Company> getAllCompanies() {
 
+        // TODO: pull correct info
         // DUMMY
         lisCompanies.add(new Company("Apple","https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/1024px-Apple_logo_black.svg.png","APPL"));
         lisCompanies.add(new Company("Google","https://www.trainingtoyou.com/wp-content/uploads/2018/08/2000px-Google__G__Logo.svg_.png","GOOGL"));
@@ -36,6 +39,34 @@ public class DaoImpl implements Dao {
         // END DUMMY
 
         return lisCompanies;
+    }
+
+    @Override
+    public List<Product> getAllProducts(Company company) {
+
+        // TODO: pull correct info
+        // DUMMY
+        lisProducts.add(new Product(
+                "Hollerator #1",
+                "Do stuff!",
+                "https://buzzhostingservices.com/images/twitter-logo-png-2.png",
+                "https://buzzhostingservices.com/images/twitter-logo-png-2.png",
+                123.45));
+        lisProducts.add(new Product(
+                "Hollerator #2",
+                "Do other stuff!",
+                "https://buzzhostingservices.com/images/twitter-logo-png-2.png",
+                "https://buzzhostingservices.com/images/twitter-logo-png-2.png",
+                123.46));
+        lisProducts.add(new Product(
+                "Hollerator #3",
+                "Do stuff faster!",
+                "https://buzzhostingservices.com/images/twitter-logo-png-2.png",
+                "https://buzzhostingservices.com/images/twitter-logo-png-2.png",
+                123.47));
+        // END DUMMY
+
+        return lisProducts;
     }
 
 

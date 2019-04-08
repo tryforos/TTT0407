@@ -30,8 +30,6 @@ public class WatchListFragment extends Fragment {
         // Required empty public constructor
     }
 
-    TextView text;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -43,8 +41,8 @@ public class WatchListFragment extends Fragment {
 
         CompanyListAdapter adapter = new CompanyListAdapter(this.getActivity(), dataList);
 
-        ListView listView = (ListView) view.findViewById(R.id.lsvCompanies);
-        listView.setAdapter(adapter);
+        ListView lsv = (ListView) view.findViewById(R.id.lsvCompanies);
+        lsv.setAdapter(adapter);
 
         // Inflate the layout for this fragment
         return view;
@@ -58,8 +56,6 @@ public class WatchListFragment extends Fragment {
         scroller.addView(text);
         return scroller;
 */
-
-
     }
 
 
@@ -68,12 +64,14 @@ public class WatchListFragment extends Fragment {
 
         super.onActivityCreated(savedInstanceState);
 
+/*
         //text = new TextView(getActivity());
         text = new TextView(getActivity());
         text.setText("holleration");
 
         //getView().set
         getView().setBackgroundColor(Color.rgb(255, 204, 153));
+*/
 
     }
 

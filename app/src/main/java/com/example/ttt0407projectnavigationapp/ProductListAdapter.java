@@ -9,15 +9,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.ttt0407projectnavigationapp.model.entity.Company;
+import com.example.ttt0407projectnavigationapp.model.entity.Product;
 
 import java.text.NumberFormat;
 import java.util.List;
 
-public class CompanyListAdapter extends ArrayAdapter<Company> {
+public class ProductListAdapter extends ArrayAdapter<Product> {
 
     // constructor
-    public CompanyListAdapter(Context context, List<Company> values) {
+    public ProductListAdapter(Context context, List<Product> values) {
         super(context, 0, values);
     }
     // END constructor
@@ -26,28 +26,28 @@ public class CompanyListAdapter extends ArrayAdapter<Company> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        Company company = getItem(position);
+        Product product = getItem(position);
 
         if(convertView==null){
             LayoutInflater inflater = (LayoutInflater) this.getContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            View rowView = inflater.inflate(R.layout.row_company, parent, false);
+            View rowView = inflater.inflate(R.layout.row_product, parent, false);
 
             convertView = rowView;
         }
 
         // set values
-        ImageView imgCompanyLogo = (ImageView) convertView.findViewById(R.id.imgCompanyLogo);
-        TextView txtCompanyInfo = (TextView) convertView.findViewById(R.id.txtCompanyInfo);
-        TextView txtStockPrice = (TextView) convertView.findViewById(R.id.txtStockPrice);
+        ImageView imgProductLogo = (ImageView) convertView.findViewById(R.id.imgProductLogo);
+        TextView txtProductDescription = (TextView) convertView.findViewById(R.id.txtProductDescription);
+        TextView txtProductPrice = (TextView) convertView.findViewById(R.id.txtProductPrice);
 
-        new ImageDownloader(imgCompanyLogo).execute(company.getStrImageUrl());
-        txtCompanyInfo.setText(company.getStrName() +" (" + company.getStrStockTicker() + ")");
+        new ImageDownloader(imgProductLogo).execute(product.getStrImageUrl());
+        txtProductDescription.setText(product.getStrName() +" - " + product.getStrShortDescription());
 
         //txtStockPrice.setText(String.valueOf(co.getDblStockPrice()));
         NumberFormat format = NumberFormat.getCurrencyInstance();
-        txtStockPrice.setText(format.format(company.getDblStockPrice()));
+        txtProductPrice.setText(format.format(product.getDblPrice()));
 
         return convertView;
     }

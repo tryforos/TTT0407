@@ -11,18 +11,21 @@ public class Product {
 
     private String strName;
     private String strUrl;
+    private String strShortDescription;
     private String strImageUrl;
     private Double dblPrice;
 
     // constructors
     public Product() {
-        this("Hollerator #88", "https://holler.com", "https://holler.com/image.png", 88.88);
+        this("Hollerator #88", "IDK", "https://holler.com", "https://holler.com/image.png", 88.88);
     }
     public Product(String strName) {
-        this(strName, "https://holler.com", "https://holler.com/image.png", 88.88);
+        this(strName, "IDK","https://holler.com", "https://holler.com/image.png", 88.88);
     }
-    public Product(String strName, String strUrl, String strImageUrl, Double dblPrice){
+    public Product(String strName, String strShortDescription, String strUrl, String strImageUrl, Double dblPrice){
+        super();
         this.strName = strName;
+        this.strShortDescription = strShortDescription;
         this.strUrl = strUrl;
         this.strImageUrl = strImageUrl;
         this.dblPrice = dblPrice;
@@ -57,9 +60,16 @@ public class Product {
     public double getDblPrice() {
         return dblPrice;
     }
-    public void setDblPrice(double dblPrice) {
+    public void setDblPrice(Double dblPrice) {
         this.dblPrice = dblPrice;
     }
+    public String getStrShortDescription() {
+        return strShortDescription;
+    }
+    public void setStrShortDescription(String strShortDescription) {
+        this.strShortDescription = strShortDescription;
+    }
+
     // END getters & setters
 
 }

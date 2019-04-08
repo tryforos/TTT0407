@@ -10,7 +10,7 @@
 
     <fragment
         android:id="@+id/watch_list_fragment"
-        class="com.example.ttt0407projectnavigationapp.fragments.WatchListFragment"
+        class="com.example.ttt0407projectnavigationapp.fragments.CompanyFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -20,5 +20,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5"
         />
+<!--
+        class="com.example.ttt0407projectnavigationapp.fragments.WatchListFragment"
+        class="com.example.ttt0407projectnavigationapp.fragments.CompanyFragment"
 
+
+-->
 </android.support.constraint.ConstraintLayout>

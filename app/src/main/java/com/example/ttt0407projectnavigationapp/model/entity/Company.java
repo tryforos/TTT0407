@@ -24,7 +24,7 @@ public class Company {
 
     // constructors
     public Company() {
-        this("Holler, Inc", "https://holler.com/image.png","HLLR");
+        this("Holler, Inc", "https://res-1.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco/v1397191318/c3b7bb31ee854d3e692aa354d9735287.png","HLLR");
     }
     public Company(String strName){
         this(strName, "https://holler.com/image.png","HLLR");
