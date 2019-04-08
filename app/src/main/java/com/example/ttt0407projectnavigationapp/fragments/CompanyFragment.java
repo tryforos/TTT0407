@@ -41,12 +41,11 @@ public class CompanyFragment extends Fragment {
 
         // set ListView
         ProductListAdapter adapter = new ProductListAdapter(this.getActivity(), lisProducts);
-        ListView lsv = (ListView) view.findViewById(R.id.lsvProducts);
+        ListView lsv = (ListView) view.findViewById(R.id.lsv_products);
         lsv.setAdapter(adapter);
 
-
-        ImageView imgCompanyLogo = (ImageView) view.findViewById(R.id.imgCompanyLogo);
-        TextView txtCompanyName = (TextView) view.findViewById(R.id.txtCompanyName);
+        ImageView imgCompanyLogo = (ImageView) view.findViewById(R.id.img_company_logo);
+        TextView txtCompanyName = (TextView) view.findViewById(R.id.txt_company_name);
 
         new ImageDownloader(imgCompanyLogo).execute(company.getStrImageUrl());
         txtCompanyName.setText(company.getStrName() + " (" + company.getStrStockTicker() +")");

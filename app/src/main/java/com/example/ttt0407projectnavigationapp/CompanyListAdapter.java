@@ -38,9 +38,9 @@ public class CompanyListAdapter extends ArrayAdapter<Company> {
         }
 
         // set values
-        ImageView imgCompanyLogo = (ImageView) convertView.findViewById(R.id.imgCompanyLogo);
-        TextView txtCompanyInfo = (TextView) convertView.findViewById(R.id.txtCompanyInfo);
-        TextView txtStockPrice = (TextView) convertView.findViewById(R.id.txtStockPrice);
+        ImageView imgCompanyLogo = (ImageView) convertView.findViewById(R.id.img_company_logo);
+        TextView txtCompanyInfo = (TextView) convertView.findViewById(R.id.txt_company_info);
+        TextView txtStockPrice = (TextView) convertView.findViewById(R.id.txt_stock_price);
 
         new ImageDownloader(imgCompanyLogo).execute(company.getStrImageUrl());
         txtCompanyInfo.setText(company.getStrName() +" (" + company.getStrStockTicker() + ")");

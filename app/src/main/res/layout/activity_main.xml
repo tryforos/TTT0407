@@ -6,21 +6,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="@android:color/white"
+    tools:context=".MainActivity"
+    >
 
-    <fragment
-        android:id="@+id/watch_list_fragment"
-        class="com.example.ttt0407projectnavigationapp.fragments.CompanyFragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5"
-        />
-<!--
+        >
+
+
+        <fragment
+            android:id="@+id/watch_list_fragment"
+            android:name="com.example.ttt0407projectnavigationapp.fragments.WatchListFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_watch_list"
+            />
+
+    </FrameLayout>
+
+    <!--
         class="com.example.ttt0407projectnavigationapp.fragments.WatchListFragment"
         class="com.example.ttt0407projectnavigationapp.fragments.CompanyFragment"
 

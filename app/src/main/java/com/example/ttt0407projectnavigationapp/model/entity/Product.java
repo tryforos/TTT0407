@@ -14,6 +14,8 @@ public class Product {
     private String strShortDescription;
     private String strImageUrl;
     private Double dblPrice;
+    // lngCompanyId will hold the Company id
+    private Long lngCompanyId;
 
     // constructors
     public Product() {

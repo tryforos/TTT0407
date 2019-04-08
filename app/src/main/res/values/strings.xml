@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">TTT0407 Project Navigation App</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hint_edt_company_name">Company Name</string>
+    <string name="hint_edt_company_stock_ticker">Stock Ticker</string>
+    <string name="hint_edt_company_image_url">Image URL</string>
+    <string name="text_btn_add_company">Add Company</string>
+    <string name="text_btn_edit_company">Edit Company</string>
+    <string name="hint_edt_product_name">Product Name</string>
+    <string name="hint_edt_product_url">Product URL</string>
+    <string name="hint_edt_product_image_url">Image URL</string>
+    <string name="text_btn_add_product">Add Product</string>
+    <string name="text_btn_edit_product">Edit Product</string>
 </resources>

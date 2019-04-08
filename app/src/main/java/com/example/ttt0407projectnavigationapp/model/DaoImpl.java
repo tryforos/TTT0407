@@ -1,12 +1,17 @@
 package com.example.ttt0407projectnavigationapp.model;
 
+import android.arch.persistence.room.Database;
+
 import com.example.ttt0407projectnavigationapp.model.entity.Company;
 import com.example.ttt0407projectnavigationapp.model.entity.Product;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
-//@Dao
+
+//@Database(entities = {Person.class, Car.class}, version = 1)
 public class DaoImpl implements Dao {
     //like LocalDatabase in TTT0404
 
@@ -16,14 +21,16 @@ public class DaoImpl implements Dao {
     // SINGLETON
     // static so that only 1 instance can be used throughout app
     //
-    private static Dao single_instance = null;
-    public static Dao getInstance() {
-        if (single_instance == null) {
+    private static Dao dao  = null;
 
-            single_instance = new DaoImpl();
+    public static Dao getInstance() {
+
+        if (dao == null) {
+
+            dao = new DaoImpl();
         }
 
-        return single_instance;
+        return dao;
     }
 
     // from Dao interface (i.e. "implements Dao")
@@ -71,45 +78,83 @@ public class DaoImpl implements Dao {
 
 
 
+    // database interaction
+    // TODO: update to actually use database
+    public void executeAddCompany(final Company c){
 
-    /*
-    @Insert
-    void insertPerson(Person person);
+/*
+        Executor myExecutor = Executors.newSingleThreadExecutor();
+        myExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                dao().insertCompany(c);
+            }
+        });
+*/
+    }
+    public void executeDeleteCompany(final Company c){
 
-    @Update
-    void updatePerson(Person person);
+/*
+        Executor myExecutor = Executors.newSingleThreadExecutor();
+        myExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                dao().deleteCompany(c);
+            }
+        });
+*/
+    }
+    public void executeUpdateComapny(final Company c){
 
-    @Delete
-    void deletePerson(Person person);
+/*
+        Executor myExecutor = Executors.newSingleThreadExecutor();
+        myExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                dao().updateCompany(c);
+            }
+        });
+*/
+    }
+    ////////
+    public void executeAddProduct(final Product p){
 
-    @Query("SELECT * FROM Person")
-    LiveData<List<Person>> fetchAllPersons();
+/*
+        Executor myExecutor = Executors.newSingleThreadExecutor();
+        myExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                dao().insertCompany(c);
+            }
+        });
+*/
+    }
+    public void executeDeleteProduct(final Product p){
 
-    @Query("SELECT * FROM Person")
-    List<Person> fetchAllPersons2();
+/*
+        Executor myExecutor = Executors.newSingleThreadExecutor();
+        myExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                dao().deleteCompany(c);
+            }
+        });
+*/
+    }
 
-    @Query("SELECT * FROM Person WHERE fullname IS :fullname LIMIT 1")
-    List<Person> getPersonByName(String fullname);
+    public void executeUpdateProduct(final Product p){
 
-*//*
-    @Query("SELECT count(*) FROM Person")
-    Long fetchThisThing();
-*//*
+/*
+        Executor myExecutor = Executors.newSingleThreadExecutor();
+        myExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                dao().updateCompany(c);
+            }
+        });
+*/
+    }
 
-    @Insert
-    void insertCar(Car car);
-
-    @Update
-    void updateCar(Car car);
-
-    @Delete
-    void deleteCar(Car car);
-
-    @Query("SELECT * FROM Car")
-    LiveData<List<Car>> fetchAllCars();
-
-    @Query("SELECT * FROM Car WHERE ownerId IS :ownerId")
-    LiveData<List<Car>> getCarsForOwner(String ownerId);*/
 
 }
 

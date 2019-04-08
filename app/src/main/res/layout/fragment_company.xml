@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.CompanyFragment">
+    tools:context=".fragments.CompanyFragment"
+    >
 
     <LinearLayout
-        android:id="@+id/llvCompany"
+        android:id="@+id/llv_company"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         >
 
         <LinearLayout
-            android:id="@+id/llvHead"
+            android:id="@+id/llv_head"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:orientation="vertical"
@@ -24,7 +27,7 @@
             >
 
             <LinearLayout
-                android:id="@+id/llvHeadContainer"
+                android:id="@+id/llv_head_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -33,14 +36,15 @@
                 >
 
                 <ImageView
-                    android:id="@+id/imgCompanyLogo"
+                    android:id="@+id/img_company_logo"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_gravity="center_horizontal"
+                    android:background="@android:color/white"
                     />
 
                 <TextView
-                    android:id="@+id/txtCompanyName"
+                    android:id="@+id/txt_company_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -55,7 +59,7 @@
         </LinearLayout>
 
         <ListView
-            android:id="@+id/lsvProducts"
+            android:id="@+id/lsv_products"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             />

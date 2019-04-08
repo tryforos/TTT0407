@@ -38,9 +38,9 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         }
 
         // set values
-        ImageView imgProductLogo = (ImageView) convertView.findViewById(R.id.imgProductLogo);
-        TextView txtProductDescription = (TextView) convertView.findViewById(R.id.txtProductDescription);
-        TextView txtProductPrice = (TextView) convertView.findViewById(R.id.txtProductPrice);
+        ImageView imgProductLogo = (ImageView) convertView.findViewById(R.id.img_product_logo);
+        TextView txtProductDescription = (TextView) convertView.findViewById(R.id.txt_product_description);
+        TextView txtProductPrice = (TextView) convertView.findViewById(R.id.txt_product_price);
 
         new ImageDownloader(imgProductLogo).execute(product.getStrImageUrl());
         txtProductDescription.setText(product.getStrName() +" - " + product.getStrShortDescription());
