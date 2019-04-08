@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- called in PersonListAdapter.java -->
+
+<LinearLayout
+    android:id="@+id/llhCompanyRow"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    >
+
+    <ImageView
+        android:id="@+id/imgCompanyLogo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        />
+
+    <LinearLayout
+        android:id="@+id/llvCompanyText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/txtCompanyInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Holler, Inc (HLLR)"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            />
+
+        <TextView
+            android:id="@+id/txtStockPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="$123.45"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

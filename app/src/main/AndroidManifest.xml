@@ -18,4 +18,13 @@
         </activity>
     </application>
 
+    <!--////////
+    //HOLLER INTERNET
+    -->
+    <!--add uses-permission tags above application tag-->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--
+    //
+    ////////-->
+
 </manifest>

@@ -1,4 +1,4 @@
-package com.example.ttt0407projectnavigationapp;
+package com.example.ttt0407projectnavigationapp.fragments;
 
 
 import android.os.Bundle;
@@ -7,10 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.ttt0407projectnavigationapp.R;
 
-public class WatchListFragment extends Fragment {
 
-    public WatchListFragment() {
+public class AddProductFragment extends Fragment {
+
+    public AddProductFragment() {
         // Required empty public constructor
     }
 
@@ -19,7 +21,7 @@ public class WatchListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_watch_list, container, false);
+        return inflater.inflate(R.layout.fragment_add_product, container, false);
     }
 
 }
