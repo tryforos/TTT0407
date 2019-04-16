@@ -2,12 +2,14 @@ package com.example.ttt0407projectnavigationapp.model.entity;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 //@Entity
-public class Company {
+public class Company implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private Long id;

@@ -1,0 +1,112 @@
+<android.support.v7.widget.Toolbar
+    android:id="@+id/tlb_watch_list"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@color/colorPrimary"
+    android:contentInsetLeft="0dp"
+    app:contentInsetLeft="0dp"
+    android:contentInsetStart="0dp"
+    app:contentInsetStart="0dp"
+    android:contentInsetRight="0dp"
+    app:contentInsetRight="0dp"
+    android:contentInsetEnd="0dp"
+    app:contentInsetEnd="0dp"
+    app:layout_constraintTop_toTopOf="parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <!--
+    android:elevation="4dp"
+    android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+    -->
+
+
+    <LinearLayout
+        android:id="@+id/llh_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        >
+        <!--
+        android:background="@color/colorAccent"
+        -->
+
+        <TextView
+            android:id="@+id/txt_lhs"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Back"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:textColor="@android:color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <ImageView
+            android:id="@+id/img_lhs"
+            android:src="@android:drawable/ic_lock_idle_low_battery"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/txt_mid"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:text="SnazzyApp"
+            android:textStyle="bold"
+            android:textSize="24dp"
+            android:textColor="@android:color/white"
+            app:layout_constraintStart_toEndOf="@+id/txt_mid"
+            />
+        <!--
+            android:background="@color/colorPrimaryDark"
+        -->
+
+        <TextView
+            android:id="@+id/txt_rhs"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Add"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:textColor="@android:color/white"
+            app:layout_constraintStart_toEndOf="@+id/txt_mid"
+            />
+
+        <ImageView
+            android:id="@+id/img_rhs"
+            android:src="@android:drawable/ic_lock_idle_low_battery"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+        <!--
+            android:src="?attr/homeAsUpIndicator"
+            android:src="@android:drawable/ic_input_add"
+
+             @android:drawable/
+            ic_input_delete
+            ic_input_add
+            ic_menu_add
+
+            android:onClick="onRhsClick"
+            android:clickable="true"
+            android:focusable="true"
+        -->
+
+    </LinearLayout>
+</android.support.v7.widget.Toolbar>

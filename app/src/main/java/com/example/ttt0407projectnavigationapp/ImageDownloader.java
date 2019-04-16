@@ -10,7 +10,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class ImageDownloader  extends AsyncTask<String, Void, Bitmap> {
+public class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
 
     ImageView imageView = null;
 

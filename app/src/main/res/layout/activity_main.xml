@@ -20,7 +20,6 @@
         app:layout_constraintTop_toTopOf="parent"
         >
 
-
         <fragment
             android:id="@+id/watch_list_fragment"
             android:name="com.example.ttt0407projectnavigationapp.fragments.WatchListFragment"

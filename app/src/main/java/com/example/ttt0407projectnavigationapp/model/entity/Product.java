@@ -3,8 +3,10 @@ package com.example.ttt0407projectnavigationapp.model.entity;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import java.io.Serializable;
+
 //@Entity
-public class Product {
+public class Product implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private Long id;
@@ -19,12 +21,15 @@ public class Product {
 
     // constructors
     public Product() {
-        this("Hollerator #88", "IDK", "https://holler.com", "https://holler.com/image.png", 88.88);
+        this("Hollerator #88",  "https://holler.com", "https://holler.com/image.png",0L,"IDK", 88.88);
     }
     public Product(String strName) {
-        this(strName, "IDK","https://holler.com", "https://holler.com/image.png", 88.88);
+        this(strName, "https://holler.com", "https://holler.com/image.png",0L,"IDK", 88.88);
     }
-    public Product(String strName, String strShortDescription, String strUrl, String strImageUrl, Double dblPrice){
+    public Product(String strName, String strUrl, String strImageUrl, Long lngCompanyId) {
+        this(strName, strUrl, strImageUrl, lngCompanyId, "IDK", 88.88);
+    }
+    public Product(String strName, String strUrl, String strImageUrl, Long lngCompanyId, String strShortDescription, Double dblPrice){
         super();
         this.strName = strName;
         this.strShortDescription = strShortDescription;
@@ -71,7 +76,12 @@ public class Product {
     public void setStrShortDescription(String strShortDescription) {
         this.strShortDescription = strShortDescription;
     }
-
-    // END getters & setters
+    public Long getLngCompanyId() {
+        return lngCompanyId;
+    }
+    public void setLngCompanyId(Long lngCompanyId) {
+        this.lngCompanyId = lngCompanyId;
+    }
+// END getters & setters
 
 }

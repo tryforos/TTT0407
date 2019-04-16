@@ -17,6 +17,11 @@
         android:orientation="vertical"
         >
 
+        <include
+            android:id="@+id/tlb_toolbar"
+            layout="@layout/toolbar_top"
+            />
+
         <LinearLayout
             android:id="@+id/llv_head"
             android:layout_width="match_parent"

@@ -10,63 +10,77 @@
     >
 
     <LinearLayout
-        android:id="@+id/llv_add_product"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingBottom="100dp"
         android:orientation="vertical"
         >
 
-        <EditText
-            android:id="@+id/edt_product_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_edt_product_name"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            tools:targetApi="o"
+        <include
+            android:id="@+id/tlb_toolbar"
+            layout="@layout/toolbar_top"
             />
 
-        <EditText
-            android:id="@+id/edt_product_url"
+        <LinearLayout
+            android:id="@+id/llv_add_product"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_edt_product_url"
-            android:layout_marginTop="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            tools:targetApi="o"
-            />
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            >
 
-        <EditText
-            android:id="@+id/edt_product_image_url"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_edt_product_image_url"
-            android:layout_marginTop="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            tools:targetApi="o"
-            />
+            <EditText
+                android:id="@+id/edt_product_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_edt_product_name"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                tools:targetApi="o"
+                />
 
-        <Button
-            android:id="@+id/btn_add_product"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/text_btn_add_product"
-            />
+            <EditText
+                android:id="@+id/edt_product_url"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_edt_product_url"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                tools:targetApi="o"
+                />
 
+            <EditText
+                android:id="@+id/edt_product_image_url"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_edt_product_image_url"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                tools:targetApi="o"
+                />
+
+            <Button
+                android:id="@+id/btn_add_product"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/text_btn_add_product"
+                />
+
+        </LinearLayout>
     </LinearLayout>
 </FrameLayout>
