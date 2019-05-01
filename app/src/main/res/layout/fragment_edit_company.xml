@@ -6,10 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
+    android:clickable="true"
+    android:focusable="true"
     tools:context=".fragments.EditCompanyFragment"
     >
 
+<!--
+    android:onClick="onClick"
+    android:background="@android:color/holo_green_light"
+-->
+
     <LinearLayout
+        android:id="@+id/llv_full_screen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="100dp"

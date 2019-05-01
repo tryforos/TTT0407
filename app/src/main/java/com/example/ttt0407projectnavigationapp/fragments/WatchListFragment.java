@@ -1,64 +1,52 @@
 package com.example.ttt0407projectnavigationapp.fragments;
 
-import android.app.Activity;
-import android.arch.lifecycle.Observer;
-import android.content.Context;
-import android.graphics.Color;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GestureDetectorCompat;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
-import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ttt0407projectnavigationapp.CompanyListAdapter;
 import com.example.ttt0407projectnavigationapp.FragmentNavigation;
-import com.example.ttt0407projectnavigationapp.GestureListener;
 import com.example.ttt0407projectnavigationapp.ImageDownloader;
-import com.example.ttt0407projectnavigationapp.MainActivity;
 import com.example.ttt0407projectnavigationapp.R;
+import com.example.ttt0407projectnavigationapp.StockPriceDownloader;
 import com.example.ttt0407projectnavigationapp.model.DaoImpl;
+import com.example.ttt0407projectnavigationapp.model.IDaoObserver;
 import com.example.ttt0407projectnavigationapp.model.entity.Company;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 
-public class WatchListFragment extends Fragment {
-
+public class WatchListFragment extends Fragment implements IDaoObserver {
 
     View view;
-    DaoImpl daoImpl = null;
     CompanyListAdapter adapter = null;
+    List<Company> lisCompanies;
+
     ListView lsv = null;
     TextView txt = null;
     LinearLayout llv  = null;
-    List<Company> lisCompany = new ArrayList<>();
-    Activity activity;
 
-
+    DaoImpl daoImpl = null;
+    //DaoImpl daoImpl = DaoImpl.getInstance();
+    //DaoImpl daoImpl = DaoImpl.getInstance(getContext());
 
 
     // constructor
@@ -72,24 +60,13 @@ public class WatchListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // indicate correct layout
-/*
-        View view =  inflater.inflate(R.layout.fragment_watch_list, container, false);
-        final DaoImpl daoImpl = DaoImpl.getInstance();
-
-        final CompanyListAdapter adapter;
-        final ListView lsv = (ListView) view.findViewById(R.id.lsv_companies);
-        final TextView txt = (TextView) view.findViewById(R.id.txt_empty);
-        final LinearLayout llv  = (LinearLayout) view.findViewById(R.id.llv_empty);
-*/
-
         view =  inflater.inflate(R.layout.fragment_watch_list, container, false);
-        daoImpl = DaoImpl.getInstance();
+        //daoImpl = DaoImpl.getInstance();
+        daoImpl = DaoImpl.getInstance(getContext());
 
         lsv = (ListView) view.findViewById(R.id.lsv_companies);
         txt = (TextView) view.findViewById(R.id.txt_empty);
         llv  = (LinearLayout) view.findViewById(R.id.llv_empty);
-
-        activity = getActivity();
 
         ////////
         // TOOLBAR
@@ -115,30 +92,22 @@ public class WatchListFragment extends Fragment {
         txtMid.setText("Watch List");
 
         // set icons
-        new ImageDownloader(imgRhs).execute(daoImpl.getStrPlusIconUrl());
+        //imgRhs.setImageResource(android.R.drawable.btn_star);
+        new ImageDownloader(imgRhs, getContext(), null).execute(daoImpl.getStrPlusIconUrl());
         imgRhs.setScaleX(0.5f);
         imgRhs.setScaleY(0.5f);
-        //imgLhs.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_input_delete));
-        //imgRhs.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_add));
 
-        // assign actions when buttons clicked
+        // assign actions when buttons in toolbar are clicked
         txtLhs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                // set correct views
-                if(lisCompany.size() > 0) {
-
-                    lsv.setVisibility(View.VISIBLE);
-                    llv.setVisibility(View.GONE);
-                }
-                else {
-
-                    lsv.setVisibility(View.GONE);
-                    llv.setVisibility(View.VISIBLE);
-                }
-                //adapter.notifyDataSetChanged();
-                //nothing
+                // nothing
+            }
+        });
+        txtMid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // nothing
             }
         });
         imgRhs.setOnClickListener(new View.OnClickListener() {
@@ -151,101 +120,54 @@ public class WatchListFragment extends Fragment {
         //
         ////////
 
-/*
-        // set custom toolbar
-        Toolbar tlb = (Toolbar) view.findViewById(R.id.tlb_watch_list);
-        getContext().setSupportActionBar(tlb);
-*/
-
-
         ////////
         // LIST STUFF
         //
         // set ListView
         // retrieve companies
-        //List<Company> lisCompany = new ArrayList<>();
-        lisCompany = daoImpl.getAllCompanies();
-        adapter = new CompanyListAdapter(this.getActivity(), lisCompany);
+        lisCompanies = daoImpl.getLisCompanies();
+        adapter = new CompanyListAdapter(this.getActivity(), lisCompanies);
         lsv.setAdapter(adapter);
 
-
-        // assign action on ListView click
+        // short-click on company row
         lsv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 // set selected Company
                 Company company = (Company) lsv.getAdapter().getItem(position);
+                daoImpl.setSelectedCompany(company);
 
-                ////////
-                // HOLLER FRAGMENT NAVIGATION
-                //
+                // update stock prices
+                updateStockPrices();
+
                 // create instance of next Fragment Object
                 CompanyFragment fragment = new CompanyFragment();
-                // set company
-                daoImpl.setSelectedCompany(company);
                 // navigate
                 FragmentNavigation.navigationToFragment(getActivity(), fragment);
-                //
-                //
-                ////////
-
-/*
-                ////////
-                // HOLLER PASS OBJECT TO FRAGMENT
-                // 1 of 1
-                // 2 in [Next Fragment] Class
-                //
-                // navigation to CompanyFragment
-                CompanyFragment fragment = CompanyFragment.newInstance(company);
-                //
-                //
-                ////////
-*/
-
             }
         });
 
+        // long-click on company row
         lsv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
                 // set selected Company
                 Company company = (Company) lsv.getAdapter().getItem(position);
-                // navigate
-                //navigationEditCompany(company);
-
+                // display menu
                 showCompanyPopup(view, company);
                 return true;
             }
         });
-
-
-/*
-        // NEED TO DO OBSERVE WHEN CHECKING DATABASE
-        // ELSE IT MAY RUN TOO FAST AND NOT INSERT VALUES
-        daoImpl.daoAccess().fetchAllPersons().observe(getActivity(), new Observer<List<Company>>() {
-            @Override
-            public void onChanged(@Nullable List<Company> lisCompany) {
-
-                dataList.clear();
-                for (Company c : lisCompany){
-                    dataList.add(c);
-                }
-                adapter.notifyDataSetChanged();
-            }
-        });
-*/
-
-
-
         //
         //
         ////////
 
         ////////
-        // EMPTY LISTVIEW
+        // PLACEHOLDER TEXTVIEW WHEN LISTVIEW IS EMPTY
         //
+        // click on  "+ Add Company"
         txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -257,90 +179,106 @@ public class WatchListFragment extends Fragment {
         ////////
 
         // set correct views
-        if(lisCompany.size() > 0) {
+        setCorrectView();
 
-            lsv.setVisibility(View.VISIBLE);
-            llv.setVisibility(View.GONE);
-        }
-        else {
+        // set observer, will run on db update in DaoImpl
+        daoImpl.watchListObserver = this;
+        daoImpl.updateCompanyList(getViewLifecycleOwner());
 
-            lsv.setVisibility(View.GONE);
-            llv.setVisibility(View.VISIBLE);
-        }
+        ////////
+        // UPDATE LISTVIEW WHEN DATABASE CHANGES
+        //
 
+        // auto-run functions when database updates are all in DAO
 
+        //
+        //
+        ////////
 
         // runs when BackStack changes
         getActivity().getSupportFragmentManager().addOnBackStackChangedListener(
-                new FragmentManager.OnBackStackChangedListener() {
-                    public void onBackStackChanged() {
+            new FragmentManager.OnBackStackChangedListener() {
+                public void onBackStackChanged() {
+                    update();
+                }
+            }
+        );
 
-                        if(lisCompany.size() > 0) {
+        ////////
+        //HANDLER PERIOD TASK
+        //
+        // pull stock quotes every 60 sec
+        final Handler handler=new Handler();
 
-                            lsv.setVisibility(View.VISIBLE);
-                            llv.setVisibility(View.GONE);
-                        }
-                        else {
+        Runnable runnableCode = new Runnable() {
 
-                            lsv.setVisibility(View.GONE);
-                            llv.setVisibility(View.VISIBLE);
-                        }
+            @Override
+            public void run() {
+                updateStockPrices();
 
-/*
-                        FragmentManager fm = getActivity().getSupportFragmentManager();
-                        if (fm != null) {
-                            int backStackCount = fm.getBackStackEntryCount();
-                            if (backStackCount == 0) {
-                                if (getSupportActionBar() != null) {
-                                    getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
-                                }
-                                setToolbarTittle(R.string.app_name);
-                            } else {
-                                if (getSupportActionBar() != null) {
-                                    getSupportActionBar().setHomeAsUpIndicator(R.drawable.back);
-                                }
-                            }
-                        }
-*/
-                    }
-                });
+                //executes the same Runnable task after a delay of 2000 milliseconds.
+                handler.postDelayed(this, 60000);
+            }
+        };
 
+        //execute a Runnable task written inside run() method on the UIThread
+        handler.post(runnableCode);
+        //
+        //
+        ////////
 
 
         // Inflate the layout for this fragment
         return view;
-
     }
 
 
+    ////////
+    ////////
+    ////////
+
+
+    ////////
+    // BUILT-IN METHODS THAT AUTO-RUN @CERTAIN POINTS
+    //
     @Override
     public void onStart(){
         super.onStart();
-
-        //lisCompany = daoImpl.getAllCompanies();
-
-        lisCompany.add(new Company("Apple", "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/1024px-Apple_logo_black.svg.png", "APPL"));
-        lisCompany.add(new Company("Google", "https://www.trainingtoyou.com/wp-content/uploads/2018/08/2000px-Google__G__Logo.svg_.png", "GOOGL"));
-        lisCompany.add(new Company("Tesla", "https://pngimg.com/uploads/tesla_logo/tesla_logo_PNG19.png", "TSLA"));
-        lisCompany.add(new Company("Twitter", "https://buzzhostingservices.com/images/twitter-logo-png-2.png", "TWTR"));
-
     }
-
     @Override
     public void onResume(){
         super.onResume();
     }
-
     @Override
     public void onPause(){
         super.onPause();
     }
-
     @Override
     public void onStop(){
         super.onStop();
     }
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+    }
+    //
+    //
+    ////////
 
+    //SET CORRECT VIEW
+    private void setCorrectView(){
+
+        if(lisCompanies.size() > 0) {
+            // if no companies, display "+ Add Company" w image
+            lsv.setVisibility(View.VISIBLE);
+            llv.setVisibility(View.GONE);
+        }
+        else {
+            // if companies, display them
+            lsv.setVisibility(View.GONE);
+            llv.setVisibility(View.VISIBLE);
+        }
+    }
 
     //POP UP MENU
     public void showCompanyPopup(View view, final Company company) {
@@ -363,7 +301,6 @@ public class WatchListFragment extends Fragment {
                 //Toast.makeText(getActivity(),"You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
                 return true;
             }
-
         });
         popup.show();
     }
@@ -380,20 +317,39 @@ public class WatchListFragment extends Fragment {
         // navigate
         FragmentNavigation.navigationToFragment(getActivity(), fragment);
     }
-
     private void navigationAddCompany(){
         // create instance of next Fragment Object
         AddCompanyFragment fragment = new AddCompanyFragment();
         // navigate
         FragmentNavigation.navigationToFragment(getActivity(), fragment);
     }
-
     private void navigationDeleteCompany(Company company){
         // delete company
         daoImpl.executeDeleteCompany(company);
     }
-
     //
     //
     ////////
+
+    // from interface
+    @Override
+    public void update() {
+
+        updateAdapter();
+    }
+
+    public void updateAdapter(){
+
+        lisCompanies = daoImpl.getLisCompanies();
+        setCorrectView();
+        adapter.notifyDataSetChanged();
+    }
+
+    public void updateStockPrices() {
+
+        if(lisCompanies.size() > 0) {
+
+            new StockPriceDownloader().execute();
+        }
+    }
 }

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,5 +38,11 @@ public class MainActivity extends AppCompatActivity {
         this.getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_watch_list);
 */
 
+    }
+
+    public void onClick(android.view.View view) {
+        // do nothing
+        // used to block clicks on previous fragments
+        Toast.makeText(this,"LOL", Toast.LENGTH_SHORT).show();
     }
 }

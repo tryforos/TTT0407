@@ -10,6 +10,7 @@
 
     <ImageView
         android:id="@+id/img_company_logo"
+        android:tag="company"
         android:layout_width="100dp"
         android:layout_height="100dp"
         />
@@ -33,7 +34,7 @@
             android:id="@+id/txt_stock_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="$123.45"
+            android:text="$128.48"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             />
 

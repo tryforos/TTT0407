@@ -1,10 +1,8 @@
 package com.example.ttt0407projectnavigationapp.fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +15,16 @@ import com.example.ttt0407projectnavigationapp.ImageDownloader;
 import com.example.ttt0407projectnavigationapp.R;
 import com.example.ttt0407projectnavigationapp.WebpageDownloader;
 import com.example.ttt0407projectnavigationapp.model.DaoImpl;
-import com.example.ttt0407projectnavigationapp.model.entity.Company;
+import com.example.ttt0407projectnavigationapp.model.IDaoObserver;
 import com.example.ttt0407projectnavigationapp.model.entity.Product;
 
 
-public class ProductFragment extends Fragment {
+public class ProductFragment extends Fragment implements IDaoObserver {
 
     private Product product;
+    View view;
+
+    DaoImpl daoImpl = DaoImpl.getInstance(getContext());
 
     // constructors
     public ProductFragment() {
@@ -35,8 +36,7 @@ public class ProductFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // indicate correct layout
-        View view = inflater.inflate(R.layout.fragment_product, container, false);
-        DaoImpl daoImpl = DaoImpl.getInstance();
+        view = inflater.inflate(R.layout.fragment_product, container, false);
 
         // set product
         product = daoImpl.getSelectedProduct();
@@ -65,7 +65,7 @@ public class ProductFragment extends Fragment {
         txtRhs.setText("Edit");
 
         // set icons
-        new ImageDownloader(imgLhs).execute(daoImpl.getStrBackIconUrl());
+        new ImageDownloader(imgLhs, getContext(), null).execute(daoImpl.getStrBackIconUrl());
         imgLhs.setScaleX(0.5f);
         imgLhs.setScaleY(0.5f);
 
@@ -87,9 +87,23 @@ public class ProductFragment extends Fragment {
         ////////
 
         // set WebView
-        WebView web = view.findViewById(R.id.web_product_page);
+        WebView web = (WebView) view.findViewById(R.id.web_product_page);
         // load webpage
         WebpageDownloader.loadWeb(web, product.getStrUrl());
+
+        // runs every time the Back Stack changes
+        getActivity().getSupportFragmentManager().addOnBackStackChangedListener(
+            new FragmentManager.OnBackStackChangedListener() {
+
+                public void onBackStackChanged() {
+                    update();
+                }
+            }
+        );
+
+        // set observer, will run on db update in DaoImpl
+        daoImpl.productObserver = this;
+        daoImpl.updateSingleProduct(getViewLifecycleOwner());
 
         // Inflate the layout for this fragment
         return view;
@@ -112,7 +126,16 @@ public class ProductFragment extends Fragment {
     //
     //
     ////////
-    //
-    //
-    ////////
+
+    @Override
+    public void update() {
+
+        // set product
+        product = daoImpl.getSelectedProduct();
+
+        // set WebView
+        WebView web = (WebView) view.findViewById(R.id.web_product_page);
+        // load webpage
+        WebpageDownloader.loadWeb(web, product.getStrUrl());
+    }
 }

@@ -15,4 +15,16 @@ public class FragmentNavigation {
         ft.addToBackStack("dtl");
         ft.commit();
     }
+
+/*
+    // TESTING
+    public static void navigationToFragment (FragmentActivity fa, Fragment f, String tag){
+
+        FragmentTransaction ft = fa.getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.fragment_container, f, tag);
+        //ft.replace(R.id.fragment_container, f);
+        ft.addToBackStack("dtl");
+        ft.commit();
+    }
+*/
 }

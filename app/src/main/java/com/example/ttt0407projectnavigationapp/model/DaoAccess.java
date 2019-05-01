@@ -16,14 +16,13 @@ import java.util.List;
 public interface DaoAccess {
     //like DaoAccess in TTT0404
 
-    List<Company> getAllCompanies();
-    List<Product> getAllProducts(Company company);
+    //List<Company> getAllCompanies();
+    //List<Product> getAllProducts(Company company);
 
 //    Books getBookByIsbn(int isbn);
 //    void saveBook(Books book);
 //    void deleteBook(Books book);
 
-/*
     @Insert
     void insertCompany(Company company);
 
@@ -34,10 +33,13 @@ public interface DaoAccess {
     void deleteCompany(Company company);
 
     @Query("SELECT * FROM Company")
-    LiveData<List<Company>> fetchAllCompanies();
+    LiveData<List<Company>> getAllCompanies();
+
+    @Query("SELECT * FROM Company WHERE intId = :intId")
+    LiveData<List<Company>> getSingleCompany(Integer intId);
 
     @Query("SELECT * FROM Company")
-    List<Company> fetchAllCompanies2();
+    List<Company> getAllCompanies2();
 
 //    @Query("SELECT * FROM Person WHERE fullname IS :fullname LIMIT 1")
 //    List<Person> getPersonByName(String fullname);
@@ -54,8 +56,13 @@ public interface DaoAccess {
     @Delete
     void deleteProduct(Product product);
 
-    @Query("SELECT * FROM Product WHERE lngCompanyId IS :lngCompanyId")
-    LiveData<List<Product>> getProductsForCompany(String lngCompanyId);
-*/
+    @Query("SELECT * FROM Product WHERE intId = :intId")
+    LiveData<List<Product>> getSingleProduct(Integer intId);
+
+    @Query("SELECT * FROM Product WHERE intCompanyId IS :intCompanyId")
+    LiveData<List<Product>> getCompanyProducts(Integer intCompanyId);
+
+    @Query("SELECT * FROM Product WHERE intCompanyId IS :intCompanyId")
+    List<Product> getCompanyProducts2(Integer intCompanyId);
 
 }

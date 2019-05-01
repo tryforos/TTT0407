@@ -25,7 +25,7 @@ public class AddProductFragment extends Fragment {
 
     private Company company;
 
-    final DaoImpl daoImpl = DaoImpl.getInstance();
+    DaoImpl daoImpl = DaoImpl.getInstance(getContext());
 
     // constructors
     public AddProductFragment() {
@@ -38,7 +38,6 @@ public class AddProductFragment extends Fragment {
 
         // indicate correct layout
         View view =  inflater.inflate(R.layout.fragment_add_product, container, false);
-        final DaoImpl daoImpl = DaoImpl.getInstance();
 
         // set company
         company = daoImpl.getSelectedCompany();
@@ -67,7 +66,7 @@ public class AddProductFragment extends Fragment {
         txtRhs.setText("Save");
 
         // set icons
-        new ImageDownloader(imgLhs).execute(daoImpl.getStrBackIconUrl());
+        new ImageDownloader(imgLhs, getContext(), null).execute(daoImpl.getStrBackIconUrl());
         imgLhs.setScaleX(0.5f);
         imgLhs.setScaleY(0.5f);
 
@@ -78,6 +77,43 @@ public class AddProductFragment extends Fragment {
                 navigationCancel();
             }
         });
+
+        // TODO: remove
+        txtMid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edtProductName.setText("Hollerator 5000");
+                edtProductUrl.setText("https://dayoftheshirt.com/");
+                edtProductImageUrl.setText("https://dayoftheshirt.com/assets/emojis/heart_eyes-b8268d9f4d08100cde0cec9e0b372da2b21385244a3174b704c95976029f1598.png");
+            }
+/*
+            // TODO: pull correct info
+            // DUMMY
+            lisProducts.add(new Product(
+                    "Hollerator #1",
+                    "Do stuff!",
+                    "https://www.journaldev.com/16813/dao-design-pattern",
+                    "https://buzzhostingservices.com/images/twitter-logo-png-2.png",
+                    123.45));
+            lisProducts.add(new Product(
+                    "Hollerator #2",
+                    "Do other stuff!",
+                    "https://en.wikipedia.org/wiki/Battle_of_Thermopylae",
+                    "https://www.freelogodesign.org/Content/img/logo-ex-7.png",
+                    123.46));
+            lisProducts.add(new Product(
+                    "Hollerator #3",
+                    "Do stuff faster!",
+                    "https://dayoftheshirt.com/",
+                    "https://dayoftheshirt.com/assets/emojis/heart_eyes-b8268d9f4d08100cde0cec9e0b372da2b21385244a3174b704c95976029f1598.png",
+                    123.47));
+            // END DUMMY
+*/
+
+
+        });
+        // END TODO: remove
+
         txtRhs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,9 +151,12 @@ public class AddProductFragment extends Fragment {
                 edtProductName.getText().toString(),
                 edtProductUrl.getText().toString(),
                 edtProductImageUrl.getText().toString(),
-                company.getId()
+                company.getIntId()
         );
+
+        daoImpl.setSelectedProduct(p);
         daoImpl.executeAddProduct(p);
+
         getActivity().getSupportFragmentManager().popBackStack();
     }
     private void navigationCancel(){

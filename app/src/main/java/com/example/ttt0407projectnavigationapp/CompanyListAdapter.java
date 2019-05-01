@@ -9,12 +9,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.ttt0407projectnavigationapp.model.DaoImpl;
 import com.example.ttt0407projectnavigationapp.model.entity.Company;
 
 import java.text.NumberFormat;
 import java.util.List;
 
 public class CompanyListAdapter extends ArrayAdapter<Company> {
+
+    DaoImpl daoImpl = DaoImpl.getInstance(getContext());
 
     // constructor
     public CompanyListAdapter(Context context, List<Company> values) {
@@ -42,12 +45,23 @@ public class CompanyListAdapter extends ArrayAdapter<Company> {
         TextView txtCompanyInfo = (TextView) convertView.findViewById(R.id.txt_company_info);
         TextView txtStockPrice = (TextView) convertView.findViewById(R.id.txt_stock_price);
 
-        new ImageDownloader(imgCompanyLogo).execute(company.getStrImageUrl());
+        //new ImageDownloader(imgCompanyLogo).execute(company.getStrImageUrl());
+        //new ImageDownloader(imgCompanyLogo, getContext()).execute(company.getStrImageUrl());
+        new ImageDownloader(imgCompanyLogo, getContext(), company.getIntId()).execute(company.getStrImageUrl());
+
         txtCompanyInfo.setText(company.getStrName() +" (" + company.getStrStockTicker() + ")");
 
-        //txtStockPrice.setText(String.valueOf(co.getDblStockPrice()));
-        NumberFormat format = NumberFormat.getCurrencyInstance();
-        txtStockPrice.setText(format.format(company.getDblStockPrice()));
+        if (company.getDblStockPrice() > 0) {
+
+            // format and set value
+            NumberFormat format = NumberFormat.getCurrencyInstance();
+            txtStockPrice.setText(format.format(company.getDblStockPrice()));
+        }
+        else {
+
+            // if error in receiving stock price
+            txtStockPrice.setText("N/A");
+        }
 
         return convertView;
     }

@@ -7,7 +7,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context=".fragments.WatchListFragment">
+    android:clickable="true"
+    android:focusable="true"
+    tools:context=".fragments.WatchListFragment"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"

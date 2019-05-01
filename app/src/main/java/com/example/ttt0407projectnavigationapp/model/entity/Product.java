@@ -5,11 +5,12 @@ import android.arch.persistence.room.PrimaryKey;
 
 import java.io.Serializable;
 
-//@Entity
-public class Product implements Serializable {
+@Entity
+public class Product {
+//public class Product implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
-    private Long id;
+    private Integer intId;
 
     private String strName;
     private String strUrl;
@@ -17,34 +18,35 @@ public class Product implements Serializable {
     private String strImageUrl;
     private Double dblPrice;
     // lngCompanyId will hold the Company id
-    private Long lngCompanyId;
+    private Integer intCompanyId;
 
     // constructors
     public Product() {
-        this("Hollerator #88",  "https://holler.com", "https://holler.com/image.png",0L,"IDK", 88.88);
+        this("Hollerator #88",  "https://holler.com", "https://holler.com/image.png",0,"IDK", 88.88);
     }
     public Product(String strName) {
-        this(strName, "https://holler.com", "https://holler.com/image.png",0L,"IDK", 88.88);
+        this(strName, "https://holler.com", "https://holler.com/image.png",0,"IDK", 88.88);
     }
-    public Product(String strName, String strUrl, String strImageUrl, Long lngCompanyId) {
-        this(strName, strUrl, strImageUrl, lngCompanyId, "IDK", 88.88);
+    public Product(String strName, String strUrl, String strImageUrl, Integer intCompanyId) {
+        this(strName, strUrl, strImageUrl, intCompanyId, "IDK", 88.88);
     }
-    public Product(String strName, String strUrl, String strImageUrl, Long lngCompanyId, String strShortDescription, Double dblPrice){
+    public Product(String strName, String strUrl, String strImageUrl, Integer intCompanyId, String strShortDescription, Double dblPrice){
         super();
         this.strName = strName;
-        this.strShortDescription = strShortDescription;
         this.strUrl = strUrl;
         this.strImageUrl = strImageUrl;
+        this.intCompanyId = intCompanyId;
+        this.strShortDescription = strShortDescription;
         this.dblPrice = dblPrice;
     }
     // END constructors
 
     // getters & setters
-    public Long getId() {
-        return id;
+    public Integer getIntId() {
+        return intId;
     }
-    public void setId(Long id) {
-        this.id = id;
+    public void setIntId(Integer intId) {
+        this.intId = intId;
     }
     public String getStrName() {
         return strName;
@@ -64,7 +66,7 @@ public class Product implements Serializable {
     public void setStrImageUrl(String strImageUrl) {
         this.strImageUrl = strImageUrl;
     }
-    public double getDblPrice() {
+    public Double getDblPrice() {
         return dblPrice;
     }
     public void setDblPrice(Double dblPrice) {
@@ -76,11 +78,11 @@ public class Product implements Serializable {
     public void setStrShortDescription(String strShortDescription) {
         this.strShortDescription = strShortDescription;
     }
-    public Long getLngCompanyId() {
-        return lngCompanyId;
+    public Integer getIntCompanyId() {
+        return intCompanyId;
     }
-    public void setLngCompanyId(Long lngCompanyId) {
-        this.lngCompanyId = lngCompanyId;
+    public void setIntCompanyId(Integer intCompanyId) {
+        this.intCompanyId = intCompanyId;
     }
 // END getters & setters
 

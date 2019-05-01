@@ -9,11 +9,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ttt0407projectnavigationapp.R;
+import com.example.ttt0407projectnavigationapp.StockPriceDownloader;
 import com.example.ttt0407projectnavigationapp.model.DaoImpl;
 import com.example.ttt0407projectnavigationapp.model.entity.Company;
 import com.example.ttt0407projectnavigationapp.model.entity.Product;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static android.text.TextUtils.isEmpty;
 
 
 public class EditProductFragment extends Fragment {
@@ -24,7 +31,10 @@ public class EditProductFragment extends Fragment {
     private EditText edtProductUrl;
     private EditText edtProductImageUrl;
 
-    final DaoImpl daoImpl = DaoImpl.getInstance();
+    DaoImpl daoImpl = DaoImpl.getInstance(getContext());
+
+    List<Product> lisProducts = daoImpl.getLisProducts();
+    Integer intPosition;
 
     // constructors
     public EditProductFragment() {
@@ -40,6 +50,15 @@ public class EditProductFragment extends Fragment {
 
         // get product
         product = daoImpl.getSelectedProduct();
+
+        // find position
+        for (int i = 0; i < lisProducts.size(); i++) {
+            if(lisProducts.get(i).getIntId() == product.getIntId()){
+                intPosition = i;
+                i = lisProducts.size();
+            }
+            i++;
+        }
 
         ////////
         // TOOLBAR
@@ -64,13 +83,6 @@ public class EditProductFragment extends Fragment {
         txtLhs.setText("Cancel");
         txtMid.setText("Edit Product");
         txtRhs.setText("Save");
-
-/*
-        // set icons
-        new ImageDownloader(imgLhs).execute(daoImpl.getStrBackIconUrl());
-        imgLhs.setScaleX(0.5f);
-        imgLhs.setScaleY(0.5f);
-*/
 
         // assign actions when toolbar buttons clicked
         txtLhs.setOnClickListener(new View.OnClickListener() {
@@ -115,19 +127,39 @@ public class EditProductFragment extends Fragment {
     ////////
     // NAVIGATION METHODS
     //
-    private void setProductNewData(){
-
-        // set new values
-        product.setStrName(edtProductName.getText().toString());
-        product.setStrUrl(edtProductUrl.getText().toString());
-        product.setStrImageUrl(edtProductImageUrl.getText().toString());
-        //add to data
-        daoImpl.executeUpdateProduct(product);
-    }
     private void navigationUpdateProduct(){
 
-        setProductNewData();
-        getActivity().getSupportFragmentManager().popBackStack();
+        if(!isEmpty(edtProductName.getText()) && !isEmpty(edtProductUrl.getText()) && !isEmpty(edtProductImageUrl.getText())) {
+
+            // set new values
+            product.setStrName(edtProductName.getText().toString());
+            product.setStrUrl(edtProductUrl.getText().toString());
+            product.setStrImageUrl(edtProductImageUrl.getText().toString());
+
+/*
+            // update in list
+            lisProducts.get(intPosition).setStrName(edtProductName.getText().toString());
+            lisProducts.get(intPosition).setStrUrl(edtProductUrl.getText().toString());
+            lisProducts.get(intPosition).setStrImageUrl(edtProductImageUrl.getText().toString());
+
+            // update in dao
+            daoImpl.setSelectedProduct(product);
+            daoImpl.setLisProducts(lisProducts);
+*/
+
+            // update in db
+            daoImpl.executeUpdateProduct(product);
+
+            // return to previous
+            getActivity().getSupportFragmentManager().popBackStack();
+
+            // notify UI success
+            Toast.makeText(getActivity(),"Product " + product.getStrName() + " successfully updated!", Toast.LENGTH_SHORT).show();
+        }
+        else {
+
+            Toast.makeText(getActivity(),"All fields must be filled in to save.", Toast.LENGTH_SHORT).show();
+        }
     }
     private void navigationCancel(){
 
@@ -136,5 +168,4 @@ public class EditProductFragment extends Fragment {
     //
     //
     ////////
-
 }
