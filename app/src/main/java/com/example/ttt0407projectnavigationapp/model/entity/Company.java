@@ -21,6 +21,8 @@ public class Company {
     private String strStockTicker;
     private Double dblStockPrice;
 
+    //private Integer intPosition;
+
     // constructors
     public Company() {
         this("Holler, Inc","HLLR", "https://res-1.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco/v1397191318/c3b7bb31ee854d3e692aa354d9735287.png");
@@ -68,8 +70,15 @@ public class Company {
     public void setDblStockPrice(Double dblStockPrice) {
         this.dblStockPrice = dblStockPrice;
     }
-
-    /*
+/*
+    public Integer getIntPosition() {
+        return intPosition;
+    }
+    public void setIntPosition(Integer intPosition) {
+        this.intPosition = intPosition;
+    }
+*/
+/*
     public Date getDteStockPriceDate() {
         return dteStockPriceDate;
     }

@@ -1,5 +1,6 @@
 package com.example.ttt0407projectnavigationapp.fragments;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -8,6 +9,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.util.Pair;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,6 +24,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ttt0407projectnavigationapp.CompanyDragListAdapter;
 import com.example.ttt0407projectnavigationapp.CompanyListAdapter;
 import com.example.ttt0407projectnavigationapp.FragmentNavigation;
 import com.example.ttt0407projectnavigationapp.ImageDownloader;
@@ -29,18 +33,27 @@ import com.example.ttt0407projectnavigationapp.StockPriceDownloader;
 import com.example.ttt0407projectnavigationapp.model.DaoImpl;
 import com.example.ttt0407projectnavigationapp.model.IDaoObserver;
 import com.example.ttt0407projectnavigationapp.model.entity.Company;
+import com.woxthebox.draglistview.DragItem;
+import com.woxthebox.draglistview.DragListView;
+import com.woxthebox.draglistview.swipe.ListSwipeHelper;
+import com.woxthebox.draglistview.swipe.ListSwipeItem;
 
 import java.io.ByteArrayOutputStream;
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class WatchListFragment extends Fragment implements IDaoObserver {
 
     View view;
-    CompanyListAdapter adapter = null;
+    //CompanyListAdapter adapter = null;
+    CompanyDragListAdapter adapter = null;
     List<Company> lisCompanies;
+    ArrayList<Pair<Long, Company>> alsCompanies;
 
-    ListView lsv = null;
+    //ListView lsv = null;
+    DragListView lsv = null;
     TextView txt = null;
     LinearLayout llv  = null;
 
@@ -64,7 +77,10 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
         //daoImpl = DaoImpl.getInstance();
         daoImpl = DaoImpl.getInstance(getContext());
 
-        lsv = (ListView) view.findViewById(R.id.lsv_companies);
+        //lsv = (ListView) view.findViewById(R.id.lsv_companies);
+        lsv = (DragListView) view.findViewById(R.id.lsv_companies);
+        lsv.getRecyclerView().setVerticalScrollBarEnabled(true);
+
         txt = (TextView) view.findViewById(R.id.txt_empty);
         llv  = (LinearLayout) view.findViewById(R.id.llv_empty);
 
@@ -126,9 +142,25 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
         // set ListView
         // retrieve companies
         lisCompanies = daoImpl.getLisCompanies();
-        adapter = new CompanyListAdapter(this.getActivity(), lisCompanies);
-        lsv.setAdapter(adapter);
 
+        // declare ArrayList
+        alsCompanies = new ArrayList<>();
+
+        adapter = new CompanyDragListAdapter(alsCompanies, R.layout.row_company, R.id.img_company_logo, false, getContext());
+        //lsv.setAdapter(adapter);
+        lsv.setAdapter(adapter, true);
+
+        lsv.setLayoutManager(new LinearLayoutManager(getContext()));
+        lsv.setCanDragHorizontally(false);
+        lsv.setCustomDragItem(new MyDragItem(getContext(), R.layout.row_company));
+
+
+
+
+
+
+/*
+        // MOVED TO CompanyDragListAdapter
         // short-click on company row
         lsv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -160,6 +192,8 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
                 return true;
             }
         });
+*/
+
         //
         //
         ////////
@@ -204,8 +238,9 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
             }
         );
 
+/*
         ////////
-        //HANDLER PERIOD TASK
+        // TIME-REPEATED CODE
         //
         // pull stock quotes every 60 sec
         final Handler handler=new Handler();
@@ -226,6 +261,61 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
         //
         //
         ////////
+*/
+
+        ////////
+        // LIST DRAG-AND-Drop
+        //
+        lsv.setDragListListener(new DragListView.DragListListenerAdapter() {
+
+            @Override
+            public void onItemDragStarted(int position) {
+                //mRefreshLayout.setEnabled(false);
+                Toast.makeText(lsv.getContext(), "ListFragment: Start - position: " + position, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onItemDragEnded(int fromPosition, int toPosition) {
+                //mRefreshLayout.setEnabled(true);
+                if (fromPosition != toPosition) {
+                    Toast.makeText(lsv.getContext(), "ListFragment: End - position: " + toPosition, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        lsv.setSwipeListener(new ListSwipeHelper.OnSwipeListenerAdapter() {
+
+            @Override
+            public void onItemSwipeStarted(ListSwipeItem item) {
+                //mRefreshLayout.setEnabled(false);
+                Toast.makeText(lsv.getContext(), "ListFragment: onItemSwipeStarted", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onItemSwipeEnded(ListSwipeItem item, ListSwipeItem.SwipeDirection swipedDirection) {
+                //mRefreshLayout.setEnabled(true);
+
+                if (swipedDirection == ListSwipeItem.SwipeDirection.LEFT) {
+                    Toast.makeText(lsv.getContext(), "ListFragment: Swipe Left", Toast.LENGTH_SHORT).show();
+
+                    // delete swiped item
+                    //Pair<Long, String> adapterItem = (Pair<Long, String>) item.getTag();
+                    //int pos = mDragListView.getAdapter().getPositionForItem(adapterItem);
+                    //mDragListView.getAdapter().removeItem(pos);
+                } else if (swipedDirection == ListSwipeItem.SwipeDirection.RIGHT) {
+                    Toast.makeText(lsv.getContext(), "ListFragment: Swipe Right", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        //
+        //
+        ////////
+
+
+
+
+
 
 
         // Inflate the layout for this fragment
@@ -265,16 +355,54 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
     //
     ////////
 
+    ////////
+    // ListView Drag-and-Drop
+    //
+    private static class MyDragItem extends DragItem {
+
+        private Context context;
+
+        // constructors
+        MyDragItem(Context context, int layoutId) {
+            super(context, layoutId);
+        }
+        // END constructors
+
+        @Override
+        public void onBindDragView(View clickedView, View dragView) {
+
+            // set views from clickedView
+            ImageView imgCompanyLogo = clickedView.findViewById(R.id.img_company_logo);
+            TextView txtCompanyInfo = clickedView.findViewById(R.id.txt_company_info);
+            TextView txtStockPrice = clickedView.findViewById(R.id.txt_stock_price);
+
+            // add to dragView
+            BitmapDrawable bitmapDrawable = ((BitmapDrawable) imgCompanyLogo.getDrawable());
+            Bitmap bitmap = bitmapDrawable .getBitmap();
+            ((ImageView) dragView.findViewById(R.id.img_company_logo)).setImageBitmap(bitmap);
+            ((TextView) dragView.findViewById(R.id.txt_company_info)).setText(txtCompanyInfo.getText());
+            ((TextView) dragView.findViewById(R.id.txt_stock_price)).setText(txtStockPrice.getText());
+
+            //dragView.findViewById(R.id.llv_company_text).setBackgroundColor(dragView.getResources().getColor(R.color.colorBackgroundOnDrag));
+            dragView.findViewById(R.id.lsi_company_row).setBackgroundColor(dragView.getResources().getColor(R.color.colorBackgroundOnDrag));
+        }
+    }
+    //
+    //
+    ////////
+
+
     //SET CORRECT VIEW
     private void setCorrectView(){
 
         if(lisCompanies.size() > 0) {
-            // if no companies, display "+ Add Company" w image
+            // if companies, display them
+            //Toast.makeText(lsv.getContext(), "There are companies! #" + lisCompanies.size(), Toast.LENGTH_LONG).show();
             lsv.setVisibility(View.VISIBLE);
             llv.setVisibility(View.GONE);
         }
         else {
-            // if companies, display them
+            // if no companies, display "+ Add Company" w image
             lsv.setVisibility(View.GONE);
             llv.setVisibility(View.VISIBLE);
         }
@@ -341,7 +469,17 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
     public void updateAdapter(){
 
         lisCompanies = daoImpl.getLisCompanies();
+
         setCorrectView();
+
+        // clear ArrayList and copy new Companies
+        alsCompanies.clear();
+        int n = lisCompanies.size();
+        //alsCompanies = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            alsCompanies.add(new Pair<>((long) i, lisCompanies.get(i)));
+        }
+        // refresh adapter
         adapter.notifyDataSetChanged();
     }
 

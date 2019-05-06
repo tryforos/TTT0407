@@ -10,6 +10,8 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.Toast;
 
+import com.woxthebox.draglistview.DragListView;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,14 +24,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // DragListView dragListView;
+
         // set custom toolbar
         Toolbar tlb = (Toolbar) findViewById(R.id.tlb_toolbar);
         setSupportActionBar(tlb);
 
-
         //getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        /*
+/*
         //Request for custom title bar
         this.requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         //set to your layout file
