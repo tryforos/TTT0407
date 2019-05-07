@@ -2,6 +2,9 @@ package com.example.ttt0407projectnavigationapp.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -151,7 +154,9 @@ public class EditProductFragment extends Fragment {
             daoImpl.executeUpdateProduct(product);
 
             // return to previous
-            getActivity().getSupportFragmentManager().popBackStack();
+            //getActivity().getSupportFragmentManager().popBackStack();
+            getActivity().getSupportFragmentManager().popBackStack("CompanyFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
 
             // notify UI success
             Toast.makeText(getActivity(),"Product " + product.getStrName() + " successfully updated!", Toast.LENGTH_SHORT).show();

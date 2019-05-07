@@ -16,6 +16,12 @@ import java.text.NumberFormat;
 import java.util.List;
 
 public class CompanyListAdapter extends ArrayAdapter<Company> {
+    /*
+     * NO LONGER USED
+     * switched over to CompanyDragListAdapter
+     * which allows for drag-and-drop on the ListView
+     *
+     */
 
     DaoImpl daoImpl = DaoImpl.getInstance(getContext());
 

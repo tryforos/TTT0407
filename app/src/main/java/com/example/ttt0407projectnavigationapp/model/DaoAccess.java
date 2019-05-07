@@ -29,11 +29,17 @@ public interface DaoAccess {
     @Update
     void updateCompany(Company company);
 
+    @Update
+    void updateCompanies(Company... companies);
+
     @Delete
     void deleteCompany(Company company);
 
     @Query("SELECT * FROM Company")
     LiveData<List<Company>> getAllCompanies();
+
+    @Query("SELECT * FROM Company ORDER BY intPosition ASC")
+    LiveData<List<Company>> getAllCompaniesOrdered();
 
     @Query("SELECT * FROM Company WHERE intId = :intId")
     LiveData<List<Company>> getSingleCompany(Integer intId);
@@ -41,17 +47,21 @@ public interface DaoAccess {
     @Query("SELECT * FROM Company")
     List<Company> getAllCompanies2();
 
-//    @Query("SELECT * FROM Person WHERE fullname IS :fullname LIMIT 1")
-//    List<Person> getPersonByName(String fullname);
-//
-//    @Query("SELECT count(*) FROM Person")
-//    Long fetchThisThing();
+    @Query("SELECT * FROM Company ORDER BY intPosition ASC")
+    List<Company> getAllCompaniesOrdered2();
+
+    ////////
+    ////////
+    ////////
 
     @Insert
     void insertProduct(Product product);
 
     @Update
     void updateProduct(Product product);
+
+    @Update
+    void updateProducts(Product... products);
 
     @Delete
     void deleteProduct(Product product);
@@ -62,7 +72,13 @@ public interface DaoAccess {
     @Query("SELECT * FROM Product WHERE intCompanyId IS :intCompanyId")
     LiveData<List<Product>> getCompanyProducts(Integer intCompanyId);
 
+    @Query("SELECT * FROM Product WHERE intCompanyId IS :intCompanyId ORDER BY intPostion ASC")
+    LiveData<List<Product>> getCompanyProductsOrdered(Integer intCompanyId);
+
     @Query("SELECT * FROM Product WHERE intCompanyId IS :intCompanyId")
     List<Product> getCompanyProducts2(Integer intCompanyId);
+
+    @Query("SELECT * FROM Product WHERE intCompanyId IS :intCompanyId ORDER BY intPostion ASC")
+    List<Product> getCompanyProductsOrdered2(Integer intCompanyId);
 
 }

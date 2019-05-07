@@ -17,17 +17,19 @@ import android.widget.Toast;
 
 import com.example.ttt0407projectnavigationapp.fragments.CompanyFragment;
 import com.example.ttt0407projectnavigationapp.fragments.EditCompanyFragment;
+import com.example.ttt0407projectnavigationapp.fragments.EditProductFragment;
+import com.example.ttt0407projectnavigationapp.fragments.ProductFragment;
 import com.example.ttt0407projectnavigationapp.fragments.WatchListFragment;
 import com.example.ttt0407projectnavigationapp.model.DaoImpl;
 import com.example.ttt0407projectnavigationapp.model.entity.Company;
+import com.example.ttt0407projectnavigationapp.model.entity.Product;
 import com.woxthebox.draglistview.DragItemAdapter;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-//public class CompanyDragListAdapter extends DragItemAdapter<Pair<Long, String>, CompanyDragListAdapter.ViewHolder> {
-public class CompanyDragListAdapter extends DragItemAdapter<Pair<Long, Company>, CompanyDragListAdapter.ViewHolder> {
+public class ProductDragListAdapter extends DragItemAdapter<Pair<Long, Product>, ProductDragListAdapter.ViewHolder> {
     // for drag-and-drop of ListView items
 
     private int mLayoutId;
@@ -38,11 +40,10 @@ public class CompanyDragListAdapter extends DragItemAdapter<Pair<Long, Company>,
     private FragmentActivity fa;
 
     DaoImpl daoImpl = null;
-    List<Company> lisCompanies;
+    List<Product> lisProducts;
 
     // constructors
-    //public CompanyDragListAdapter(ArrayList<Pair<Long, String>> list, int layoutId, int grabHandleId, boolean dragOnLongPress) {
-    public CompanyDragListAdapter(ArrayList<Pair<Long, Company>> list, int layoutId, int grabHandleId, boolean dragOnLongPress, Context context, FragmentActivity fa) {
+    public ProductDragListAdapter(ArrayList<Pair<Long, Product>> list, int layoutId, int grabHandleId, boolean dragOnLongPress, Context context, FragmentActivity fa) {
         super();
         mLayoutId = layoutId;
         mGrabHandleId = grabHandleId;
@@ -52,7 +53,7 @@ public class CompanyDragListAdapter extends DragItemAdapter<Pair<Long, Company>,
         this.fa = fa;
 
         daoImpl = DaoImpl.getInstance(context);
-        lisCompanies = daoImpl.getLisCompanies();
+        lisProducts = daoImpl.getLisProducts();
         setItemList(list);
     }
     // END constructors
@@ -66,26 +67,14 @@ public class CompanyDragListAdapter extends DragItemAdapter<Pair<Long, Company>,
 
     // updates info on row XML
     @Override
-    public void onBindViewHolder(@NonNull CompanyDragListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ProductDragListAdapter.ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
 
-        Company c = mItemList.get(position).second;
+        Product p = mItemList.get(position).second;
 
-        new ImageDownloader(holder.imgCompanyLogo, context, c.getIntId()).execute(c.getStrImageUrl());
+        new ImageDownloader(holder.imgProductLogo, context, p.getIntId()).execute(p.getStrImageUrl());
 
-        holder.txtCompanyInfo.setText(c.getStrName() +" (" + c.getStrStockTicker() + ")");
-
-        if (c.getDblStockPrice() > 0) {
-
-            // format and set value
-            NumberFormat format = NumberFormat.getCurrencyInstance();
-            holder.txtStockPrice.setText(format.format(c.getDblStockPrice()));
-        }
-        else {
-
-            // if error in receiving stock price
-            holder.txtStockPrice.setText("N/A");
-        }
+        holder.txtProductDescription.setText(p.getStrName());
 
         holder.itemView.setTag(mItemList.get(position));
     }
@@ -97,34 +86,28 @@ public class CompanyDragListAdapter extends DragItemAdapter<Pair<Long, Company>,
 
     class ViewHolder extends DragItemAdapter.ViewHolder {
 
-        ImageView imgCompanyLogo;
-        TextView txtCompanyInfo;
-        TextView txtStockPrice;
+        ImageView imgProductLogo;
+        TextView txtProductDescription;
+        TextView txtProductPrice;
 
         ViewHolder(final View itemView) {
             super(itemView, mGrabHandleId, mDragOnLongPress);
 
-            imgCompanyLogo = (ImageView) itemView.findViewById(R.id.img_company_logo);
-            txtCompanyInfo = (TextView) itemView.findViewById(R.id.txt_company_info);
-            txtStockPrice = (TextView) itemView.findViewById(R.id.txt_stock_price);
+            imgProductLogo = (ImageView) itemView.findViewById(R.id.img_product_logo);
+            txtProductDescription = (TextView) itemView.findViewById(R.id.txt_product_description);
+            txtProductPrice = (TextView) itemView.findViewById(R.id.txt_product_price);
         }
 
-        // onClick of item in ListView on WatchListFragment
+        // onClick of item in ListView on CompanyFragment
         @Override
         public void onItemClicked(View view) {
+            // navigate to Product page
 
-            //Toast.makeText(view.getContext(), "CompanyDragListAdapter: Item clicked " + this.getAdapterPosition(), Toast.LENGTH_SHORT).show();
-
-            lisCompanies = daoImpl.getLisCompanies();
-
-            Company company = lisCompanies.get(this.getAdapterPosition());
-            daoImpl.setSelectedCompany(company);
-
-            WatchListFragment wlf = new WatchListFragment();
-            wlf.updateStockPrices(lisCompanies);
+            Product p = lisProducts.get(this.getAdapterPosition());
+            daoImpl.setSelectedProduct(p);
 
             // create instance of next Fragment Object
-            CompanyFragment fragment = new CompanyFragment();
+            ProductFragment fragment = new ProductFragment();
             // navigate
             FragmentNavigation.navigationToFragment(fa, fragment);
         }
@@ -133,38 +116,39 @@ public class CompanyDragListAdapter extends DragItemAdapter<Pair<Long, Company>,
         @Override
         public boolean onItemLongClicked(View view) {
 
-            //Toast.makeText(view.getContext(), "CompanyDragListAdapter: Item long clicked " + this.getAdapterPosition(), Toast.LENGTH_SHORT).show();
-
-            Company company = lisCompanies.get(this.getAdapterPosition());
-            showCompanyPopup(view, company);
+            Product p = lisProducts.get(this.getAdapterPosition());
+            showProductPopup(view, p);
 
             return true;
         }
 
         //POP UP MENU
-        public void showCompanyPopup(View view, final Company company) {
+        public void showProductPopup(View view, final Product p) {
+            // Edit & Delete pop-up menu
+            // appears onLongClick of list item
 
             PopupMenu popup = new PopupMenu(fa, view);
             MenuInflater inflater = popup.getMenuInflater();
-            inflater.inflate(R.menu.menu_company_delete_edit, popup.getMenu());
+            inflater.inflate(R.menu.menu_product_delete_edit, popup.getMenu());
 
             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 
                 public boolean onMenuItemClick(MenuItem item) {
 
                     if (item.getTitle().toString().equals("Edit")) {
-                        // set company
-                        daoImpl.setSelectedCompany(company);
+                        // set product
+                        daoImpl.setSelectedProduct(p);
                         // create instance of next Fragment Object
-                        EditCompanyFragment fragment = new EditCompanyFragment();
+                        EditProductFragment fragment = new EditProductFragment();
                         // navigate
                         FragmentNavigation.navigationToFragment(fa, fragment);
                     }
                     else{
-                        daoImpl.executeDeleteCompany(company);
-                        Toast.makeText(fa,company.getStrName() + " deleted", Toast.LENGTH_SHORT).show();
+                        // delete product
+                        daoImpl.executeDeleteProduct(p);
+                        Toast.makeText(fa,p.getStrName() + " deleted", Toast.LENGTH_SHORT).show();
                     }
-                    //Toast.makeText(getActivity(),"You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+
                     return true;
                 }
             });

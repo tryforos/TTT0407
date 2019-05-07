@@ -2,6 +2,7 @@ package com.example.ttt0407projectnavigationapp.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,9 @@ import com.example.ttt0407projectnavigationapp.model.DaoImpl;
 import com.example.ttt0407projectnavigationapp.model.entity.Company;
 import com.example.ttt0407projectnavigationapp.model.entity.Product;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class AddProductFragment extends Fragment {
 
@@ -26,6 +30,7 @@ public class AddProductFragment extends Fragment {
     private Company company;
 
     DaoImpl daoImpl = DaoImpl.getInstance(getContext());
+    List<Product> lisProducts = new ArrayList<>();
 
     // constructors
     public AddProductFragment() {
@@ -41,6 +46,7 @@ public class AddProductFragment extends Fragment {
 
         // set company
         company = daoImpl.getSelectedCompany();
+        lisProducts = daoImpl.getLisProducts();
 
         ////////
         // TOOLBAR
@@ -153,6 +159,7 @@ public class AddProductFragment extends Fragment {
                 edtProductImageUrl.getText().toString(),
                 company.getIntId()
         );
+        p.setIntPostion(lisProducts.size());
 
         daoImpl.setSelectedProduct(p);
         daoImpl.executeAddProduct(p);

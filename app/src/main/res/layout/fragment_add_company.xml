@@ -8,6 +8,7 @@
     android:background="@android:color/white"
     android:clickable="true"
     android:focusable="true"
+    android:onClick="onClick"
     tools:context=".fragments.AddCompanyFragment"
     >
 

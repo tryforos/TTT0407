@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-<LinearLayout
+changed on switch over to ProductDragListAdapter
 -->
 <com.woxthebox.draglistview.swipe.ListSwipeItem
     android:id="@+id/lsi_company_row"

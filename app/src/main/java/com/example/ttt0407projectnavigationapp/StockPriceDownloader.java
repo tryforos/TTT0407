@@ -177,7 +177,6 @@ public class StockPriceDownloader extends AsyncTask<String, Void, JSONObject> {
             // single stock
             Double dbl = getStockPrice(jso, "Stock Quotes", "1. symbol", lisCompanies.get(0).getStrStockTicker(), "2. price");
             iStockPriceFetcher.stockPriceFetched(dbl);
-            return;
         }
         else {
 
@@ -186,8 +185,9 @@ public class StockPriceDownloader extends AsyncTask<String, Void, JSONObject> {
 
                 Double dbl = getStockPrice(jso, "Stock Quotes", "1. symbol", lisCompanies.get(i).getStrStockTicker(), "2. price");
                 lisCompanies.get(i).setDblStockPrice(dbl);
-                daoImpl.executeUpdateCompany(lisCompanies.get(i));
             }
+
+            daoImpl.executeUpdateCompanies(lisCompanies);
         }
     }
     //

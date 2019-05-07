@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     public void onClick(android.view.View view) {
         // do nothing
         // used to block clicks on previous fragments
-        Toast.makeText(this,"LOL", Toast.LENGTH_SHORT).show();
+        Utilities.hideKeyboard(this);
+        //Toast.makeText(this,"LOL", Toast.LENGTH_SHORT).show();
     }
 }

@@ -16,6 +16,12 @@ import java.text.NumberFormat;
 import java.util.List;
 
 public class ProductListAdapter extends ArrayAdapter<Product> {
+    /*
+     * NO LONGER USED
+     * switched over to ProductDragListAdapter
+     * which allows for drag-and-drop on the ListView
+     *
+     */
 
     DaoImpl daoImpl = DaoImpl.getInstance(getContext());
 

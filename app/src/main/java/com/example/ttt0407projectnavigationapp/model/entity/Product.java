@@ -19,7 +19,7 @@ public class Product {
     private Double dblPrice;
     // lngCompanyId will hold the Company id
     private Integer intCompanyId;
-    //private Integer intPostion;
+    private Integer intPostion;
 
     // constructors
     public Product() {
@@ -85,14 +85,14 @@ public class Product {
     public void setIntCompanyId(Integer intCompanyId) {
         this.intCompanyId = intCompanyId;
     }
-/*
+
     public Integer getIntPostion() {
         return intPostion;
     }
     public void setIntPostion(Integer intPostion) {
         this.intPostion = intPostion;
     }
-*/
+
     // END getters & setters
 
 }

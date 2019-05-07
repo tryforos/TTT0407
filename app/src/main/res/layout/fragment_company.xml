@@ -9,6 +9,7 @@
     android:background="@android:color/white"
     android:clickable="true"
     android:focusable="true"
+    android:onClick="onClick"
     tools:context=".fragments.CompanyFragment"
     >
 
@@ -66,10 +67,15 @@
 
         </LinearLayout>
 
+<!--
         <ListView
+            android:background="#BBBBBB"
+-->
+        <com.woxthebox.draglistview.DragListView
             android:id="@+id/lsv_products"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/llv_head"
             />
 
     </LinearLayout>

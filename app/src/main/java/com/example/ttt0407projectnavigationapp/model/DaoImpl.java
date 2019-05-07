@@ -23,13 +23,15 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import static java.util.Objects.isNull;
+
 
 @Database(entities = {Company.class, Product.class}, version = 1)
 public abstract class DaoImpl extends RoomDatabase {
 //public class DaoImpl implements DaoAccess {
     //like LocalDatabase in TTT0404
 
-    public static final String DATABASE_NAME = "db";
+    public static final String DATABASE_NAME = "dbO";
     public abstract DaoAccess daoAccess();
     private static DaoImpl daoImpl = null;
 
@@ -44,6 +46,8 @@ public abstract class DaoImpl extends RoomDatabase {
     private Company selectedCompany;
     private Product selectedProduct;
 
+    private Boolean booDoNotRefresh = false;
+    private Boolean booPostDelete = false;
     private Boolean booFirstStockDownloader = true;
 
     // icon URLs
@@ -61,7 +65,11 @@ public abstract class DaoImpl extends RoomDatabase {
 
             copyAttachedDatabase(context, DaoImpl.DATABASE_NAME);
 
-            //daoImpl = Room.inMemoryDatabaseBuilder(context, DaoImpl.class).build();
+/*
+            daoImpl = Room.databaseBuilder(context, DaoImpl.class, DATABASE_NAME)
+                    .fallbackToDestructiveMigration()
+                    .build();
+*/
             daoImpl = Room.databaseBuilder(context, DaoImpl.class, DATABASE_NAME).build();
         }
 
@@ -124,7 +132,8 @@ public abstract class DaoImpl extends RoomDatabase {
         myExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                lisCompanies = daoAccess().getAllCompanies2();
+                //lisCompanies = daoAccess().getAllCompanies2();
+                lisCompanies = daoAccess().getAllCompaniesOrdered2();
                 daoImpl.setLisCompanies(lisCompanies);
             }
         });
@@ -137,7 +146,8 @@ public abstract class DaoImpl extends RoomDatabase {
         myExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                lisProducts = daoAccess().getCompanyProducts2(company.getIntId());
+                //lisProducts = daoAccess().getCompanyProducts2(company.getIntId());
+                lisProducts = daoAccess().getCompanyProductsOrdered2(company.getIntId());
                 daoImpl.setLisProducts(lisProducts);
             }
         });
@@ -180,6 +190,16 @@ public abstract class DaoImpl extends RoomDatabase {
             }
         });
     }
+    public void executeUpdateCompanies(final List<Company> lisC){
+
+        Executor myExecutor = Executors.newSingleThreadExecutor();
+        myExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                daoAccess().updateCompanies((Company[]) lisC.toArray(new Company[lisC.size()]));
+            }
+        });
+    }
 
     // Product
     public void executeAddProduct(final Product p){
@@ -212,6 +232,16 @@ public abstract class DaoImpl extends RoomDatabase {
             }
         });
     }
+    public void executeUpdateProducts(final List<Product> lisP){
+
+        Executor myExecutor = Executors.newSingleThreadExecutor();
+        myExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                daoAccess().updateProducts((Product[]) lisP.toArray(new Product[lisP.size()]));
+            }
+        });
+    }
     //
     //
     ////////
@@ -222,23 +252,41 @@ public abstract class DaoImpl extends RoomDatabase {
     //
     public void updateCompanyList(LifecycleOwner owner) {
 
-        this.daoAccess().getAllCompanies().observe(owner , new Observer<List<Company>>() {
+        //this.daoAccess().getAllCompanies().observe(owner , new Observer<List<Company>>() {
+        this.daoAccess().getAllCompaniesOrdered().observe(owner , new Observer<List<Company>>() {
             @Override
             public void onChanged(@Nullable List<Company> lis) {
 
+                Log.i("C Obs onChange Count", "LOL");
+
+                int i = 0;
                 lisCompanies.clear();
                 for (Company c : lis){
+                    if (c.getIntPosition() == null){
+                        c.setIntPosition(-1);
+                    }
+                    if (c.getIntPosition() != i || booPostDelete){
+                        booPostDelete = true;
+                        Log.i("C intPosition post-del", c.getIntPosition() +" -> " + i);
+                        c.setIntPosition(i);
+                    }
                     lisCompanies.add(c);
+                    i++;
                 }
+
 
                 if(booFirstStockDownloader){
                     // first time thru, update stock prices, which will trigger this section again
                     booFirstStockDownloader = false;
                     new StockPriceDownloader().execute();
                 }
-                else if(watchListObserver != null) {
+                else if(watchListObserver != null && !booDoNotRefresh) {
                     // update WatchListFragment every time lisCompanies changes
                     watchListObserver.update();
+                }
+                else if(booDoNotRefresh){
+                    // update of WatchListFragment above creates wonky animation on drag-and-drop
+                    booDoNotRefresh = false;
                 }
             }
         });
@@ -246,19 +294,36 @@ public abstract class DaoImpl extends RoomDatabase {
 
     public void updateProductList(LifecycleOwner owner) {
 
-        daoImpl.daoAccess().getCompanyProducts(selectedCompany.getIntId()).observe(owner, new Observer<List<Product>>() {
+        //daoImpl.daoAccess().getCompanyProducts(selectedCompany.getIntId()).observe(owner, new Observer<List<Product>>() {
+        daoImpl.daoAccess().getCompanyProductsOrdered(selectedCompany.getIntId()).observe(owner, new Observer<List<Product>>() {
             @Override
             public void onChanged(@Nullable List<Product> lis) {
 
+                Log.i("P Obs onChange Count", "LOL");
+
                 // update products
+                int i = 0;
                 lisProducts.clear();
-                for (Product p : lis){
+                for (Product p : lis) {
+                    if (p.getIntPostion() == null){
+                        p.setIntPostion(-1);
+                    }
+                    if (p.getIntPostion() != i || booPostDelete){
+                        booPostDelete = true;
+                        Log.i("P intPosition post-del", p.getIntPostion() +" -> " + i);
+                        p.setIntPostion(i);
+                    }
                     lisProducts.add(p);
+                    i++;
                 }
 
-                if(companyProductsObserver != null) {
+                if (companyProductsObserver != null && !booDoNotRefresh) {
                     // update Company page every time lisCompanies changes
                     companyProductsObserver.update();
+                }
+                else if (booDoNotRefresh) {
+                    // update of Company page above creates wonky animation on drag-and-drop
+                    booDoNotRefresh = false;
                 }
             }
         });
@@ -335,6 +400,24 @@ public abstract class DaoImpl extends RoomDatabase {
     }
     public void setLisProducts(List<Product> lisProducts) {
         this.lisProducts = lisProducts;
+    }
+    public Boolean getBooDoNotRefresh() {
+        return booDoNotRefresh;
+    }
+    public void setBooDoNotRefresh(Boolean booDoNotRefresh) {
+        this.booDoNotRefresh = booDoNotRefresh;
+    }
+    public Boolean getBooFirstStockDownloader() {
+        return booFirstStockDownloader;
+    }
+    public void setBooFirstStockDownloader(Boolean booFirstStockDownloader) {
+        this.booFirstStockDownloader = booFirstStockDownloader;
+    }
+    public Boolean getBooPostDelete() {
+        return booPostDelete;
+    }
+    public void setBooPostDelete(Boolean booPostDelete) {
+        this.booPostDelete = booPostDelete;
     }
     // END getters & setters
 }

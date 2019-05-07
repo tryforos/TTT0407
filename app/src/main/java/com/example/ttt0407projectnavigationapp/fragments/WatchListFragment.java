@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,6 +31,7 @@ import com.example.ttt0407projectnavigationapp.FragmentNavigation;
 import com.example.ttt0407projectnavigationapp.ImageDownloader;
 import com.example.ttt0407projectnavigationapp.R;
 import com.example.ttt0407projectnavigationapp.StockPriceDownloader;
+import com.example.ttt0407projectnavigationapp.Utilities;
 import com.example.ttt0407projectnavigationapp.model.DaoImpl;
 import com.example.ttt0407projectnavigationapp.model.IDaoObserver;
 import com.example.ttt0407projectnavigationapp.model.entity.Company;
@@ -47,8 +49,10 @@ import java.util.List;
 public class WatchListFragment extends Fragment implements IDaoObserver {
 
     View view;
+
     //CompanyListAdapter adapter = null;
     CompanyDragListAdapter adapter = null;
+
     List<Company> lisCompanies;
     ArrayList<Pair<Long, Company>> alsCompanies;
 
@@ -58,8 +62,6 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
     LinearLayout llv  = null;
 
     DaoImpl daoImpl = null;
-    //DaoImpl daoImpl = DaoImpl.getInstance();
-    //DaoImpl daoImpl = DaoImpl.getInstance(getContext());
 
 
     // constructor
@@ -74,6 +76,7 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
 
         // indicate correct layout
         view =  inflater.inflate(R.layout.fragment_watch_list, container, false);
+
         //daoImpl = DaoImpl.getInstance();
         daoImpl = DaoImpl.getInstance(getContext());
 
@@ -118,6 +121,7 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
             @Override
             public void onClick(View v) {
                 // nothing
+                Utilities.hideKeyboard(getActivity());
             }
         });
         txtMid.setOnClickListener(new View.OnClickListener() {
@@ -146,7 +150,7 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
         // declare ArrayList
         alsCompanies = new ArrayList<>();
 
-        adapter = new CompanyDragListAdapter(alsCompanies, R.layout.row_company, R.id.img_company_logo, false, getContext());
+        adapter = new CompanyDragListAdapter(alsCompanies, R.layout.row_company, R.id.img_company_logo, false, getContext(), getActivity());
         //lsv.setAdapter(adapter);
         lsv.setAdapter(adapter, true);
 
@@ -154,13 +158,9 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
         lsv.setCanDragHorizontally(false);
         lsv.setCustomDragItem(new MyDragItem(getContext(), R.layout.row_company));
 
-
-
-
-
-
 /*
         // MOVED TO CompanyDragListAdapter
+
         // short-click on company row
         lsv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -212,18 +212,11 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
         //
         ////////
 
-        // set correct views
-        setCorrectView();
-
-        // set observer, will run on db update in DaoImpl
-        daoImpl.watchListObserver = this;
-        daoImpl.updateCompanyList(getViewLifecycleOwner());
-
         ////////
         // UPDATE LISTVIEW WHEN DATABASE CHANGES
         //
 
-        // auto-run functions when database updates are all in DAO
+        // auto-run functions on database update are all in DAO
 
         //
         //
@@ -234,11 +227,11 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
             new FragmentManager.OnBackStackChangedListener() {
                 public void onBackStackChanged() {
                     update();
+                    Utilities.hideKeyboard(getActivity());
                 }
             }
         );
 
-/*
         ////////
         // TIME-REPEATED CODE
         //
@@ -249,7 +242,7 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
 
             @Override
             public void run() {
-                updateStockPrices();
+                updateStockPrices(lisCompanies);
 
                 //executes the same Runnable task after a delay of 2000 milliseconds.
                 handler.postDelayed(this, 60000);
@@ -261,7 +254,6 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
         //
         //
         ////////
-*/
 
         ////////
         // LIST DRAG-AND-Drop
@@ -271,14 +263,58 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
             @Override
             public void onItemDragStarted(int position) {
                 //mRefreshLayout.setEnabled(false);
-                Toast.makeText(lsv.getContext(), "ListFragment: Start - position: " + position, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(lsv.getContext(), "WatchListFragment: Start - position: " + position, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onItemDragEnded(int fromPosition, int toPosition) {
                 //mRefreshLayout.setEnabled(true);
+
                 if (fromPosition != toPosition) {
-                    Toast.makeText(lsv.getContext(), "ListFragment: End - position: " + toPosition, Toast.LENGTH_SHORT).show();
+
+                    Company company = lisCompanies.get(toPosition);
+
+                    //resetCompanyPositions();
+
+                    String str = "";
+
+                    for (int i = 0; i < lisCompanies.size(); i++) {
+
+                        // for log
+                        str = lisCompanies.get(i).getStrName() +": " + lisCompanies.get(i).getIntPosition();
+
+                        // shift all intPosition variables between to & from
+                        if (fromPosition < toPosition) {
+                            // from low to high
+                            if (lisCompanies.get(i).getIntPosition() == fromPosition) {
+
+                                lisCompanies.get(i).setIntPosition(toPosition);
+                            }
+                            else if (lisCompanies.get(i).getIntPosition() > fromPosition && lisCompanies.get(i).getIntPosition() <= toPosition) {
+
+                                lisCompanies.get(i).setIntPosition(lisCompanies.get(i).getIntPosition() - 1);
+                            }
+                        } else { // toPosition < fromPosition
+
+                            // from high to low
+                            if (lisCompanies.get(i).getIntPosition() == fromPosition) {
+
+                                lisCompanies.get(i).setIntPosition(toPosition);
+                            }
+                            else if (lisCompanies.get(i).getIntPosition() >= toPosition && lisCompanies.get(i).getIntPosition() < fromPosition) {
+
+                                lisCompanies.get(i).setIntPosition(lisCompanies.get(i).getIntPosition() + 1);
+                            }
+                        }
+
+                        // update log
+                        str = str + " -> " + lisCompanies.get(i).getIntPosition();
+                        Log.i("C Position Moves", str);
+                    }
+
+                    // update in database, but don't refresh
+                    daoImpl.setBooDoNotRefresh(true);
+                    daoImpl.executeUpdateCompanies(lisCompanies);
                 }
             }
         });
@@ -288,7 +324,7 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
             @Override
             public void onItemSwipeStarted(ListSwipeItem item) {
                 //mRefreshLayout.setEnabled(false);
-                Toast.makeText(lsv.getContext(), "ListFragment: onItemSwipeStarted", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(lsv.getContext(), "WatchListFragment: onItemSwipeStarted", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -296,14 +332,14 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
                 //mRefreshLayout.setEnabled(true);
 
                 if (swipedDirection == ListSwipeItem.SwipeDirection.LEFT) {
-                    Toast.makeText(lsv.getContext(), "ListFragment: Swipe Left", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(lsv.getContext(), "WatchListFragment: Swipe Left", Toast.LENGTH_SHORT).show();
 
                     // delete swiped item
                     //Pair<Long, String> adapterItem = (Pair<Long, String>) item.getTag();
                     //int pos = mDragListView.getAdapter().getPositionForItem(adapterItem);
                     //mDragListView.getAdapter().removeItem(pos);
                 } else if (swipedDirection == ListSwipeItem.SwipeDirection.RIGHT) {
-                    Toast.makeText(lsv.getContext(), "ListFragment: Swipe Right", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(lsv.getContext(), "WatchListFragment: Swipe Right", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -312,11 +348,12 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
         //
         ////////
 
+        // set correct views
+        setCorrectView();
 
-
-
-
-
+        // set observer, will run on db update in DaoImpl
+        daoImpl.watchListObserver = this;
+        daoImpl.updateCompanyList(getViewLifecycleOwner());
 
         // Inflate the layout for this fragment
         return view;
@@ -358,6 +395,26 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
     ////////
     // ListView Drag-and-Drop
     //
+    private void resetCompanyPositions(){
+        // resets intPositions on all companies if they get messed up
+
+        lisCompanies = daoImpl.getLisCompanies();
+
+        String str = "";
+
+        for (int i = 0; i < lisCompanies.size(); i++) {
+
+            str = lisCompanies.get(i).getStrName() +": " + lisCompanies.get(i).getIntPosition();
+
+            lisCompanies.get(i).setIntPosition(i);
+
+            str = str + " -> " + lisCompanies.get(i).getIntPosition();
+            Log.i("Reset Company Positions", str);
+        }
+
+        daoImpl.executeUpdateCompanies(lisCompanies);
+    }
+
     private static class MyDragItem extends DragItem {
 
         private Context context;
@@ -370,6 +427,7 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
 
         @Override
         public void onBindDragView(View clickedView, View dragView) {
+            // dictates the layout of the view being dragged
 
             // set views from clickedView
             ImageView imgCompanyLogo = clickedView.findViewById(R.id.img_company_logo);
@@ -383,14 +441,12 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
             ((TextView) dragView.findViewById(R.id.txt_company_info)).setText(txtCompanyInfo.getText());
             ((TextView) dragView.findViewById(R.id.txt_stock_price)).setText(txtStockPrice.getText());
 
-            //dragView.findViewById(R.id.llv_company_text).setBackgroundColor(dragView.getResources().getColor(R.color.colorBackgroundOnDrag));
             dragView.findViewById(R.id.lsi_company_row).setBackgroundColor(dragView.getResources().getColor(R.color.colorBackgroundOnDrag));
         }
     }
     //
     //
     ////////
-
 
     //SET CORRECT VIEW
     private void setCorrectView(){
@@ -407,6 +463,9 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
             llv.setVisibility(View.VISIBLE);
         }
     }
+
+/*
+    // MOVED TO CompanyDragListAdapter
 
     //POP UP MENU
     public void showCompanyPopup(View view, final Company company) {
@@ -432,11 +491,21 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
         });
         popup.show();
     }
+*/
 
 
     ////////
     // NAVIGATION METHODS
     //
+    private void navigationAddCompany(){
+        // create instance of next Fragment Object
+        AddCompanyFragment fragment = new AddCompanyFragment();
+        // navigate
+        FragmentNavigation.navigationToFragment(getActivity(), fragment);
+    }
+/*
+    // MOVED TO CompanyDragListAdapter
+
     private void navigationEditCompany(Company company){
         // set company
         daoImpl.setSelectedCompany(company);
@@ -445,16 +514,11 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
         // navigate
         FragmentNavigation.navigationToFragment(getActivity(), fragment);
     }
-    private void navigationAddCompany(){
-        // create instance of next Fragment Object
-        AddCompanyFragment fragment = new AddCompanyFragment();
-        // navigate
-        FragmentNavigation.navigationToFragment(getActivity(), fragment);
-    }
     private void navigationDeleteCompany(Company company){
         // delete company
         daoImpl.executeDeleteCompany(company);
     }
+*/
     //
     //
     ////////
@@ -462,6 +526,8 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
     // from interface
     @Override
     public void update() {
+
+        Log.i("WLFrag Update Count", "LULZ");
 
         updateAdapter();
     }
@@ -479,15 +545,27 @@ public class WatchListFragment extends Fragment implements IDaoObserver {
         for (int i = 0; i < n; i++) {
             alsCompanies.add(new Pair<>((long) i, lisCompanies.get(i)));
         }
+
         // refresh adapter
         adapter.notifyDataSetChanged();
+
+        if (daoImpl.getBooPostDelete()){
+            // if we just deleted, intPosition has been updated in lisCompanies but not in database
+            // this updates in database but does not refresh WatchListFragment again
+            daoImpl.setBooPostDelete(false);
+            daoImpl.setBooDoNotRefresh(true);
+            daoImpl.executeUpdateCompanies(lisCompanies);
+        }
     }
 
-    public void updateStockPrices() {
+    public void updateStockPrices(List<Company> lisC) {
 
-        if(lisCompanies.size() > 0) {
+        if(lisC.size() > 0) {
+
+            daoImpl = DaoImpl.getInstance(getContext());
 
             new StockPriceDownloader().execute();
+            daoImpl.executeUpdateCompanies(lisC);
         }
     }
 }

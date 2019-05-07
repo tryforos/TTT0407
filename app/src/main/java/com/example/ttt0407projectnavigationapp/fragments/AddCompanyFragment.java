@@ -206,6 +206,7 @@ public class AddCompanyFragment extends Fragment implements IStockPriceFetcher {
                     edtCompanyImageUrl.getText().toString()
             );
             c.setDblStockPrice(dbl);
+            c.setIntPosition(lisCompanies.size());
 
             // add to database
             // also updates in dao via observe functions in DaoImpl
@@ -227,6 +228,7 @@ public class AddCompanyFragment extends Fragment implements IStockPriceFetcher {
                     edtCompanyImageUrl.getText().toString()
             );
             c.setDblStockPrice(dbl);
+            c.setIntPosition(lisCompanies.size());
 
             // add to database
             // also updates in dao via observe functions in DaoImpl

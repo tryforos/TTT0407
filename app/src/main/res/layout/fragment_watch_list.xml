@@ -9,10 +9,12 @@
     android:background="@android:color/white"
     android:clickable="true"
     android:focusable="true"
+    android:onClick="onClick"
     tools:context=".fragments.WatchListFragment"
     >
 
     <LinearLayout
+        android:id="@+id/llv_watch_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -29,7 +31,7 @@
         <com.woxthebox.draglistview.DragListView
             android:id="@+id/lsv_companies"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/tlb_toolbar"
             />
 <!--

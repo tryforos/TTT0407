@@ -1,43 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    android:id="@+id/llh_product_row"
+<!--
+changed on switch over to ProductDragListAdapter
+-->
+<com.woxthebox.draglistview.swipe.ListSwipeItem
+    android:id="@+id/lsi_product_row"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:tag="kick rocks"
+    app:leftViewId="@+id/itm_left"
+    app:rightViewId="@+id/itm_right"
+    app:swipeViewId="@+id/llh_row_product"
     >
 
-    <ImageView
-        android:id="@+id/img_product_logo"
-        android:tag="product"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+    <TextView
+        android:id="@+id/itm_left"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/llh_row_product"
+        android:layout_alignTop="@+id/llh_row_product"
+        android:background="#ff0000"
+        android:gravity="start|center_vertical"
+        android:padding="16dp"
+        android:text="Red"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        />
+
+    <TextView
+        android:id="@+id/itm_right"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/llh_row_product"
+        android:layout_alignTop="@+id/llh_row_product"
+        android:background="#0000ff"
+        android:gravity="end|center_vertical"
+        android:padding="16dp"
+        android:text="Blue"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
         />
 
     <LinearLayout
-        android:id="@+id/llv_product_text"
+        android:id="@+id/llh_row_product"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         >
 
-        <TextView
-            android:id="@+id/txt_product_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Hollerbook Pro - Boom!"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        <ImageView
+            android:id="@+id/img_product_logo"
+            android:tag="product"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             />
 
-        <TextView
-            android:id="@+id/txt_product_price"
+        <LinearLayout
+            android:id="@+id/llv_product_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="$19.80"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
 
+            <TextView
+                android:id="@+id/txt_product_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hollerbook Pro - Boom!"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                />
+
+            <TextView
+                android:id="@+id/txt_product_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="$X.XX"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:visibility="gone"
+                />
+
+        </LinearLayout>
     </LinearLayout>
-
-</LinearLayout>
+</com.woxthebox.draglistview.swipe.ListSwipeItem>

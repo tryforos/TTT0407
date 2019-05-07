@@ -21,7 +21,7 @@ public class Company {
     private String strStockTicker;
     private Double dblStockPrice;
 
-    //private Integer intPosition;
+    private Integer intPosition;
 
     // constructors
     public Company() {
@@ -70,14 +70,12 @@ public class Company {
     public void setDblStockPrice(Double dblStockPrice) {
         this.dblStockPrice = dblStockPrice;
     }
-/*
     public Integer getIntPosition() {
         return intPosition;
     }
     public void setIntPosition(Integer intPosition) {
         this.intPosition = intPosition;
     }
-*/
 /*
     public Date getDteStockPriceDate() {
         return dteStockPriceDate;
